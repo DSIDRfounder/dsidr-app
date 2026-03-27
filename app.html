@@ -1,0 +1,3545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSIDR · AI Project Coach</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500;9..40,700&family=DM+Mono:wght@300;400&display=swap');
+:root {
+  --bg:#0d1b36;--s:rgba(255,255,255,0.07);--s2:rgba(255,255,255,0.12);
+  --b:rgba(255,255,255,0.10);--b2:rgba(255,255,255,0.20);
+  --t:#eef4ff;--t2:rgba(238,244,255,0.65);--t3:rgba(238,244,255,0.38);
+  --v1:#2563ff;--v2:#00d4ff;--v3:rgba(37,99,255,0.22);--r:18px;--rs:12px;
+}
+body.sci{--v1:#00c896;--v2:#a8ff78;--v3:rgba(0,200,150,0.15);}
+body.bld{--v1:#ff6b35;--v2:#ffd23f;--v3:rgba(255,107,53,0.15);}
+body.act{--v1:#ff3c8e;--v2:#ff9de2;--v3:rgba(255,60,142,0.15);}
+body.ent{--v1:#7b2fff;--v2:#c77dff;--v3:rgba(123,47,255,0.15);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--t);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+#amb{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);animation:od 20s ease-in-out infinite;}
+.o1{width:500px;height:500px;background:radial-gradient(circle,rgba(37,99,255,0.35),transparent 70%);top:-130px;left:-90px;}
+.o2{width:380px;height:380px;background:radial-gradient(circle,rgba(0,212,255,0.18),transparent 70%);top:35%;right:-90px;animation-delay:-7s;}
+.o3{width:340px;height:340px;background:radial-gradient(circle,rgba(37,99,255,0.25),transparent 70%);bottom:-60px;left:25%;animation-delay:-14s;}
+@keyframes od{0%,100%{opacity:0.7;transform:translate(0,0)}50%{opacity:1;transform:translate(25px,-18px)}}
+#hf{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.hx{position:absolute;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);border:1px solid rgba(255,255,255,0.05);animation:hp 7s ease-in-out infinite;}
+@keyframes hp{0%,100%{opacity:0.12}50%{opacity:0.45}}
+#tess{position:fixed;bottom:-80px;right:-80px;width:360px;height:360px;z-index:0;pointer-events:none;opacity:0.035;animation:tr 45s linear infinite;}
+@keyframes tr{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+#app{position:relative;z-index:1;max-width:460px;margin:0 auto;padding:0 18px 110px;min-height:100vh;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 18px;}
+.wm{display:flex;align-items:center;}
+.wm em{color:var(--v2);font-style:normal;}
+.tr2{display:flex;align-items:center;gap:8px;}
+.xpw{display:flex;align-items:center;gap:6px;}
+.lvlb{background:var(--v3);border:1px solid var(--v1);border-radius:100px;padding:3px 10px;font-size:0.6rem;font-family:'DM Mono',monospace;color:var(--v2);letter-spacing:0.1em;}
+.xpo{width:52px;height:4px;background:var(--b);border-radius:2px;overflow:hidden;}
+.xpi{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--v1),var(--v2));transition:width 1s ease;}
+.xpn{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--t3);}
+.av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--v1),var(--v2));display:flex;align-items:center;justify-content:center;font-size:0.95rem;cursor:pointer;}
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;justify-content:center;}
+.bni{display:flex;align-items:center;gap:2px;background:rgba(4,8,15,0.9);backdrop-filter:blur(24px);border:1px solid var(--b2);border-radius:100px;padding:7px 10px;margin-bottom:14px;}
+.nb{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 13px;border-radius:18px;cursor:pointer;border:none;background:transparent;color:var(--t3);transition:all 0.2s;}
+.nb.active{background:var(--v3);color:var(--v2);}
+.nb svg{width:17px;height:17px;}
+.nb span{font-size:0.5rem;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;}
+.sc{display:none;animation:si 0.4s cubic-bezier(0.16,1,0.3,1);}
+.sc.active{display:block;}
+@keyframes si{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.ptk{display:flex;align-items:center;margin-bottom:18px;background:var(--s);border:1px solid var(--b);border-radius:100px;padding:7px 10px;}
+.ptn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.ptc{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--b2);background:var(--s2);font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--t3);display:flex;align-items:center;justify-content:center;transition:all 0.3s;}
+.ptn.done .ptc{border-color:var(--v1);background:var(--v3);color:var(--v2);}
+.ptn.active .ptc{border-color:var(--v2);background:var(--v3);color:var(--v2);box-shadow:0 0 10px rgba(0,212,255,0.2);}
+.ptl{font-size:0.48rem;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:0.1em;}
+.ptn.active .ptl,.ptn.done .ptl{color:var(--v2);}
+.ey{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.eyd{width:5px;height:5px;border-radius:50%;background:var(--v2);box-shadow:0 0 7px var(--v2);}
+.eyt{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;color:var(--v2);text-transform:uppercase;}
+h1.ttl{font-size:1.5rem;font-weight:200;line-height:1.2;margin-bottom:5px;}
+h1.ttl strong{font-weight:600;}
+.sub{font-size:0.84rem;color:var(--t2);line-height:1.6;margin-bottom:20px;}
+.pills{display:flex;gap:5px;margin-bottom:16px;}
+.pill{height:3px;flex:1;border-radius:2px;background:var(--b);transition:all 0.5s;}
+.pill.done{background:linear-gradient(90deg,var(--v1),var(--v2));}
+.pill.active{background:linear-gradient(90deg,var(--v2),var(--v1));box-shadow:0 0 8px rgba(0,212,255,0.35);}
+.chat{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;max-height:380px;overflow-y:auto;padding-right:3px;scroll-behavior:smooth;}
+.chat::-webkit-scrollbar{width:2px;}
+.chat::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
+.msg{display:flex;gap:8px;animation:mi 0.35s cubic-bezier(0.16,1,0.3,1);}
+@keyframes mi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.ai{align-items:flex-start;}
+.msg.user{flex-direction:row-reverse;align-items:flex-start;}
+.mi{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.68rem;margin-top:1px;}
+.msg.ai .mi{background:linear-gradient(135deg,var(--v1),var(--v2));}
+.msg.user .mi{background:var(--s2);border:1px solid var(--b2);}
+.mb{padding:10px 14px;border-radius:14px;font-size:0.85rem;line-height:1.62;max-width:84%;}
+.msg.ai .mb{background:var(--s2);border:1px solid var(--b);border-top-left-radius:3px;color:var(--t);}
+.msg.user .mb{background:linear-gradient(135deg,var(--v3),rgba(0,212,255,0.07));border:1px solid var(--v1);border-top-right-radius:3px;color:var(--t);}
+.typing{display:none;align-items:flex-start;gap:8px;margin-bottom:8px;}
+.typing.vis{display:flex;}
+.tdots{display:flex;align-items:center;gap:4px;padding:12px 14px;background:var(--s2);border:1px solid var(--b);border-radius:14px;border-top-left-radius:3px;}
+.td{width:5px;height:5px;border-radius:50%;background:var(--t3);animation:tb 1.2s infinite;}
+.td:nth-child(2){animation-delay:.15s}.td:nth-child(3){animation-delay:.3s}
+@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.sc-cursor{display:inline-block;width:2px;height:14px;background:var(--v2);margin-left:2px;animation:blink 0.7s infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.ia{background:var(--s);border:1px solid var(--b2);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;transition:border-color 0.2s;margin-bottom:10px;}
+.ia:focus-within{border-color:var(--v1);box-shadow:0 0 0 3px var(--v3);}
+.ita{background:transparent;border:none;outline:none;color:var(--t);font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:300;resize:none;min-height:38px;max-height:110px;line-height:1.5;width:100%;}
+.ita::placeholder{color:var(--t3);}
+.ir{display:flex;align-items:center;justify-content:space-between;}
+.tbtns{display:flex;gap:2px;}
+.tbtn{width:30px;height:30px;border-radius:8px;border:none;background:transparent;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.tbtn:hover{background:var(--s2);color:var(--t2);}
+.tbtn.rec{color:#ff4d6d;animation:rp 1s infinite;}
+@keyframes rp{0%,100%{opacity:1}50%{opacity:0.4}}
+.tbtn svg{width:14px;height:14px;}
+.sbtn{background:linear-gradient(135deg,var(--v1),var(--v2));border:none;border-radius:10px;padding:7px 16px;color:white;font-size:0.78rem;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.sbtn:hover{opacity:0.88;transform:translateY(-1px);}
+.sbtn:disabled{opacity:0.35;transform:none;cursor:not-allowed;}
+.stk{width:100%;background:transparent;border:1px dashed rgba(255,100,100,0.28);border-radius:var(--rs);padding:10px;color:rgba(255,140,140,0.65);font-size:0.76rem;cursor:pointer;transition:all 0.2s;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'DM Sans',sans-serif;}
+.stk:hover{border-color:rgba(255,100,100,0.5);color:#ff9090;background:rgba(255,80,80,0.05);}
+.cbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--v1),var(--v2));border:none;border-radius:var(--rs);color:white;font-size:0.88rem;font-weight:500;cursor:pointer;transition:all 0.25s;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;}
+.cbtn:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 8px 28px rgba(37,99,255,0.3);}
+.gbtn{width:100%;background:transparent;border:1px solid var(--b2);border-radius:var(--rs);padding:12px;color:var(--t2);font-size:0.82rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;margin-top:8px;}
+.gbtn:hover{color:var(--t);background:var(--s2);}
+.hero{background:linear-gradient(160deg,var(--v3),rgba(0,0,0,0));border:1px solid rgba(255,255,255,0.07);border-radius:var(--r);padding:22px;margin-bottom:16px;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;top:-40px;right:-40px;width:110px;height:110px;background:radial-gradient(circle,var(--v1),transparent 70%);opacity:0.15;pointer-events:none;}
+.slbl{font-size:0.58rem;letter-spacing:0.18em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:9px;}
+.pc{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:15px;margin-bottom:9px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.pc:hover{border-color:var(--b2);transform:translateY(-1px);}
+.pc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--v1),var(--v2));border-radius:3px 0 0 3px;}
+.pt2{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.pnm{font-size:0.88rem;font-weight:500;line-height:1.3;}
+.pph{font-size:0.56rem;font-family:'DM Mono',monospace;background:var(--v3);border:1px solid var(--v1);border-radius:100px;padding:2px 8px;color:var(--v2);letter-spacing:0.1em;}
+.pb2{height:3px;background:var(--b);border-radius:2px;overflow:hidden;margin-bottom:7px;}
+.pf2{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--v1),var(--v2));}
+.pm{display:flex;align-items:center;justify-content:space-between;font-size:0.65rem;color:var(--t3);}
+.addb{width:100%;background:var(--s);border:1px dashed var(--b2);border-radius:var(--r);padding:14px;color:var(--t3);font-size:0.8rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:2px;}
+.addb:hover{border-color:var(--v1);color:var(--v2);background:var(--v3);}
+.tmg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+.tc{background:var(--s);border:1.5px solid var(--b);border-radius:var(--rs);padding:13px;cursor:pointer;transition:all 0.2s;}
+.tc:hover{border-color:var(--b2);transform:translateY(-1px);}
+.tc.sel{border-color:var(--v1);background:var(--v3);}
+.tci{font-size:1.4rem;margin-bottom:7px;display:block;}
+.tcn{font-size:0.8rem;font-weight:500;margin-bottom:2px;}
+.tcd{font-size:0.65rem;color:var(--t3);line-height:1.3;}
+.tc.sel .tcd{color:var(--t2);}
+.nil{font-size:0.58rem;letter-spacing:0.16em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:7px;}
+.nin{width:100%;background:var(--s);border:1px solid var(--b2);border-radius:var(--rs);padding:13px 15px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:300;outline:none;transition:border-color 0.2s;margin-bottom:18px;}
+.nin:focus{border-color:var(--v1);box-shadow:0 0 0 3px var(--v3);}
+.nin::placeholder{color:var(--t3);}
+.tlr{display:flex;gap:5px;margin-bottom:22px;}
+.tl{flex:1;background:var(--s);border:1px solid var(--b);border-radius:var(--rs);padding:9px 5px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.tl.sel{background:var(--v3);border-color:var(--v1);}
+.tln{font-family:'DM Mono',monospace;font-size:0.95rem;color:var(--t);display:block;margin-bottom:2px;}
+.tl.sel .tln{color:var(--v2);}
+.tll{font-size:0.56rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.1em;}
+.tl.sel .tll{color:var(--v2);}
+.aib{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(37,99,255,0.15),rgba(0,212,255,0.1));border:1px solid rgba(0,212,255,0.25);border-radius:100px;padding:4px 11px;font-size:0.6rem;font-family:'DM Mono',monospace;color:var(--v2);letter-spacing:0.1em;margin-bottom:14px;}
+.aid{width:5px;height:5px;border-radius:50%;background:var(--v2);box-shadow:0 0 6px var(--v2);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.ar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px;}
+.ac{display:flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--b2);border-radius:100px;padding:4px 10px;font-size:0.68rem;color:var(--t2);font-family:'DM Mono',monospace;}
+.ax{cursor:pointer;color:var(--t3);margin-left:2px;}
+.ax:hover{color:var(--t);}
+.aa{display:flex;align-items:center;gap:5px;background:var(--s);border:1px solid var(--b);border-radius:100px;padding:4px 11px;font-size:0.68rem;color:var(--t3);cursor:pointer;transition:all 0.15s;}
+.aa:hover{color:var(--v2);border-color:var(--v1);}
+.kb{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.kc{background:var(--s);border:1px solid var(--b);border-radius:var(--rs);padding:12px;min-height:120px;transition:background 0.15s,border-color 0.15s;}
+.kch{font-size:0.56rem;letter-spacing:0.14em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:9px;display:flex;justify-content:space-between;}
+.kt{background:var(--s2);border:1px solid var(--b);border-radius:7px;padding:8px 9px;font-size:0.72rem;margin-bottom:5px;color:var(--t2);line-height:1.35;}
+.kt.dn{opacity:0.45;text-decoration:line-through;}
+.kadd{width:100%;background:transparent;border:1px dashed rgba(255,255,255,0.1);border-radius:7px;padding:7px;color:var(--t3);font-size:0.7rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;margin-top:4px;}
+.kadd:hover{border-color:var(--v2);color:var(--v2);}
+.kt.drag-over{border-color:var(--v2);background:rgba(0,212,255,0.1);transform:scale(0.98);}
+.kt.dragging{opacity:0.35;transform:scale(0.96);}
+.drag-over-col{background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.3);}
+
+/* ── NOOR GRID ── */
+.noor-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.noor-card{background:var(--s);border:1px solid var(--b);border-radius:var(--rs);padding:11px 13px;transition:border-color 0.3s;}
+.noor-card.has-items{border-color:rgba(37,99,255,0.3);background:rgba(37,99,255,0.04);}
+.noor-label{font-size:0.56rem;letter-spacing:0.16em;color:var(--v2);font-family:"DM Mono",monospace;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.noor-label::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--v2);flex-shrink:0;}
+.noor-item{font-size:0.74rem;color:var(--t2);padding:3px 0;border-bottom:1px solid var(--b);line-height:1.4;animation:si 0.3s cubic-bezier(0.16,1,0.3,1);}
+.noor-item:last-child{border-bottom:none;padding-bottom:0;}
+.noor-empty{font-size:0.7rem;color:var(--t3);font-style:italic;}
+
+/* NOOR suggestions — selectable chips inside each card */
+.noor-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--b);}
+.noor-sug{font-size:0.68rem;padding:5px 10px;border-radius:20px;background:var(--s);border:1px solid var(--b2);
+  color:var(--t2);cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.noor-sug:hover{border-color:var(--v1);background:var(--v3);color:var(--v2);}
+.noor-sug.selected{background:linear-gradient(135deg,var(--v1),var(--v2));border-color:transparent;color:#fff;font-weight:400;}
+.noor-sug.selected:hover{opacity:0.85;}
+.noor-add-custom{font-size:0.68rem;padding:5px 10px;border-radius:20px;background:transparent;
+  border:1px dashed var(--b2);color:var(--t3);cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.noor-add-custom:hover{border-color:var(--v1);color:var(--t2);}
+.noor-custom-inp{font-size:0.72rem;padding:5px 10px;border-radius:20px;background:var(--s);
+  border:1px solid var(--v1);color:var(--t);outline:none;font-family:'DM Sans',sans-serif;width:120px;}
+.noor-card.expanded{grid-column:1/-1;}
+.noor-card-tap{font-size:0.58rem;color:var(--t3);text-align:center;margin-top:4px;opacity:0;transition:opacity 0.2s;}
+.noor-card:hover .noor-card-tap{opacity:1;}
+
+/* Identify phase — compact chat so NOOR stays visible */
+.identify-mode .chat{max-height:180px;min-height:100px;overflow-y:auto;}
+.identify-mode #noor-panel{display:block !important;}
+
+/* ── SUGGESTION CHIPS ── */
+.noor-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--b);}
+.noor-sug{font-size:0.68rem;padding:5px 10px;border-radius:20px;background:var(--s);border:1px solid var(--b2);
+  color:var(--t2);cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.noor-sug:hover{border-color:var(--v1);background:var(--v3);color:var(--v2);}
+.noor-sug.selected{background:linear-gradient(135deg,var(--v1),var(--v2));border-color:transparent;color:#fff;font-weight:400;}
+.noor-sug.selected:hover{opacity:0.85;}
+.noor-add-custom{font-size:0.68rem;padding:5px 10px;border-radius:20px;background:transparent;
+  border:1px dashed var(--b2);color:var(--t3);cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.noor-add-custom:hover{border-color:var(--v1);color:var(--t2);}
+.noor-custom-inp{font-size:0.72rem;padding:5px 10px;border-radius:20px;background:var(--s);
+  border:1px solid var(--v1);color:var(--t);font-family:'DM Sans',sans-serif;outline:none;width:140px;}
+.noor-card.expanded{grid-column:1/-1;}
+.noor-card-tap{font-size:0.58rem;color:var(--t3);text-align:center;margin-top:4px;opacity:0;transition:opacity 0.2s;}
+.noor-card:hover .noor-card-tap{opacity:1;}
+
+/* Quick-pick area above input during Identify */
+.quick-picks{display:none;margin-bottom:8px;animation:si 0.3s cubic-bezier(0.16,1,0.3,1);}
+.quick-picks.vis{display:block;}
+.qp-label{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;}
+.qp-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.qp-chip{font-size:0.74rem;padding:7px 14px;border-radius:20px;background:var(--s);border:1px solid var(--b2);
+  color:var(--t2);cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.qp-chip:hover{border-color:var(--v1);background:var(--v3);color:var(--v2);transform:translateY(-1px);}
+.qp-chip:active{transform:scale(0.97);}
+
+/* ── QUEST LOG ── */
+.ql{display:flex;flex-direction:column;gap:0;margin-bottom:14px;position:relative;}
+.ql::before{content:"";position:absolute;left:13px;top:20px;bottom:20px;width:1px;background:linear-gradient(var(--v1),rgba(37,99,255,0.05));z-index:0;}
+.qc{position:relative;padding-left:36px;padding-bottom:14px;animation:si 0.4s cubic-bezier(0.16,1,0.3,1);}
+.qc:last-child{padding-bottom:0;}
+.q-dot{position:absolute;left:7px;top:14px;width:14px;height:14px;border-radius:50%;border:2px solid var(--v1);background:var(--bg);z-index:1;transition:all 0.3s;}
+.qc.q-active .q-dot{background:var(--v1);box-shadow:0 0 10px var(--v1);}
+.qc.q-done .q-dot{background:var(--v2);border-color:var(--v2);box-shadow:0 0 8px var(--v2);}
+.qc.q-blocked .q-dot{background:#ff4d6d;border-color:#ff4d6d;}
+.q-card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:14px 16px;transition:all 0.2s;}
+.qc.q-active .q-card{border-color:rgba(37,99,255,0.4);background:rgba(37,99,255,0.06);}
+.qc.q-done .q-card{border-color:rgba(0,212,255,0.2);background:rgba(0,212,255,0.03);opacity:0.85;}
+.qc.q-blocked .q-card{border-color:rgba(255,77,109,0.35);background:rgba(255,77,109,0.04);}
+.q-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;}
+.q-title{font-size:0.88rem;font-weight:400;color:var(--t);line-height:1.35;flex:1;}
+.qc.q-done .q-title{text-decoration:line-through;color:var(--t3);}
+.q-badge{font-size:0.55rem;font-family:"DM Mono",monospace;letter-spacing:0.1em;border-radius:100px;padding:2px 9px;white-space:nowrap;flex-shrink:0;border:1px solid;}
+.q-badge.todo{background:var(--s2);border-color:var(--b2);color:var(--t3);}
+.q-badge.active{background:rgba(37,99,255,0.15);border-color:rgba(37,99,255,0.4);color:var(--v2);}
+.q-badge.done{background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.3);color:var(--v2);}
+.q-badge.blocked{background:rgba(255,77,109,0.1);border-color:rgba(255,77,109,0.3);color:#ff4d6d;}
+.q-day{font-size:0.6rem;color:var(--t3);font-family:"DM Mono",monospace;margin-left:8px;}
+.q-note{font-size:0.78rem;color:var(--t2);line-height:1.55;margin-top:8px;font-style:italic;border-left:2px solid var(--v1);padding-left:10px;}
+.q-img{width:100%;border-radius:10px;margin-top:10px;max-height:220px;object-fit:cover;display:block;border:1px solid var(--b);}
+.q-img-btn{width:100%;height:72px;border-radius:10px;margin-top:10px;background:var(--s2);border:1px dashed var(--b2);display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:var(--t3);cursor:pointer;transition:all 0.2s;gap:6px;font-family:"DM Sans",sans-serif;}
+.q-img-btn:hover{border-color:var(--v2);color:var(--v2);}
+.q-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.q-btn{font-size:0.68rem;font-family:"DM Sans",sans-serif;border:1px solid var(--b2);border-radius:var(--rs);padding:5px 11px;background:transparent;color:var(--t2);cursor:pointer;transition:all 0.15s;}
+.q-btn:hover{border-color:var(--v2);color:var(--v2);background:rgba(0,212,255,0.06);}
+.q-btn.primary{background:var(--v3);border-color:var(--v1);color:var(--v2);}
+.q-btn.primary:hover{background:rgba(37,99,255,0.2);}
+.q-btn.danger{border-color:rgba(255,77,109,0.3);color:#ff4d6d;}
+.q-btn.danger:hover{background:rgba(255,77,109,0.08);}
+.q-expand{display:none;margin-top:10px;}
+.q-expand.open{display:block;}
+.q-note-inp{width:100%;background:var(--s);border:1px solid var(--b2);border-radius:var(--rs);padding:9px 12px;color:var(--t);font-family:"DM Sans",sans-serif;font-size:0.82rem;resize:none;outline:none;min-height:64px;line-height:1.5;transition:border-color 0.2s;}
+.q-note-inp:focus{border-color:var(--v1);}
+.q-note-inp::placeholder{color:var(--t3);}
+
+/* ── PLAN CARD ── */
+.plan-card{background:linear-gradient(160deg,rgba(37,99,255,0.1),rgba(0,212,255,0.05));border:1px solid rgba(37,99,255,0.25);border-radius:var(--r);padding:20px;margin-bottom:16px;animation:si 0.5s cubic-bezier(0.16,1,0.3,1);}
+.plan-card-title{font-size:0.58rem;letter-spacing:0.18em;color:var(--v2);font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.plan-card-title::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--v2);box-shadow:0 0 7px var(--v2);flex-shrink:0;}
+.plan-field{margin-bottom:12px;}
+.plan-field:last-child{margin-bottom:0;}
+.plan-field-label{font-size:0.56rem;letter-spacing:0.14em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:4px;}
+.plan-field-val{font-size:0.84rem;color:var(--t);line-height:1.55;font-weight:300;}
+.plan-divider{height:1px;background:rgba(255,255,255,0.07);margin:12px 0;}
+
+/* ── CONSTELLATION MAP ── */
+.constellation{position:relative;width:100%;min-height:420px;margin:0 auto 16px;overflow:visible;}
+.constellation svg.cx-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.cx-line{stroke:url(#cx-grad);stroke-width:1.2;opacity:0;animation:cxFade 0.6s ease forwards;}
+@keyframes cxFade{to{opacity:0.5}}
+.cx-node{position:absolute;transform:translate(-50%,-50%);opacity:0;animation:cxPop 0.5s cubic-bezier(0.16,1,0.3,1) forwards;z-index:2;}
+@keyframes cxPop{to{opacity:1;}}
+.cx-core{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:default;}
+.cx-star{border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;}
+.cx-star::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(37,99,255,0.2);animation:cxPulse 3s ease-in-out infinite;}
+@keyframes cxPulse{0%,100%{transform:scale(1);opacity:0.4}50%{transform:scale(1.25);opacity:0}}
+.cx-star-goal{width:56px;height:56px;background:linear-gradient(135deg,var(--v1),var(--v2));box-shadow:0 0 30px rgba(37,99,255,0.5),0 0 60px rgba(0,212,255,0.2);}
+.cx-star-why{width:36px;height:36px;background:linear-gradient(135deg,rgba(37,99,255,0.7),rgba(0,212,255,0.5));box-shadow:0 0 18px rgba(37,99,255,0.3);}
+.cx-star-cat{width:30px;height:30px;background:var(--s2);border:1.5px solid var(--v1);box-shadow:0 0 14px rgba(37,99,255,0.2);}
+.cx-star-cat.obstacles{border-color:rgba(255,100,100,0.5);box-shadow:0 0 14px rgba(255,80,80,0.2);}
+.cx-star-cat.obstacles::after{border-color:rgba(255,100,100,0.15);}
+.cx-star-item{width:10px;height:10px;background:rgba(37,99,255,0.5);box-shadow:0 0 8px rgba(37,99,255,0.3);}
+.cx-star-item.obstacles{background:rgba(255,100,100,0.4);box-shadow:0 0 8px rgba(255,80,80,0.2);}
+.cx-star-item::after{display:none;}
+.cx-label{font-size:0.68rem;color:var(--t);font-weight:400;text-align:center;max-width:90px;line-height:1.3;text-shadow:0 1px 6px rgba(0,0,0,0.8);}
+.cx-label-sm{font-size:0.6rem;color:var(--t2);font-weight:300;max-width:80px;text-align:center;line-height:1.25;text-shadow:0 1px 4px rgba(0,0,0,0.8);}
+.cx-label-cat{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--v2);text-shadow:0 1px 4px rgba(0,0,0,0.8);}
+.cx-label-cat.obstacles{color:rgba(255,140,140,0.8);}
+.cx-why-text{font-size:0.62rem;color:var(--t3);max-width:110px;text-align:center;line-height:1.35;font-style:italic;text-shadow:0 1px 4px rgba(0,0,0,0.8);}
+
+/* Compact constellation for review page */
+.constellation.compact{min-height:300px;transform:scale(0.85);transform-origin:top center;margin-bottom:0;}
+.tkr{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:15px;margin-bottom:12px;}
+.trt{font-size:0.58rem;letter-spacing:0.16em;color:var(--t3);font-family:'DM Mono',monospace;margin-bottom:12px;text-transform:uppercase;}
+.trr{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.trn{font-size:0.74rem;color:var(--t2);min-width:75px;}
+.trb{flex:1;height:4px;background:var(--b);border-radius:2px;overflow:hidden;}
+.trf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--v1),var(--v2));transition:width 1.1s ease;}
+.trp{font-size:0.62rem;color:var(--t3);font-family:'DM Mono',monospace;min-width:28px;text-align:right;}
+.uw{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+.ue{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--b);font-size:0.77rem;color:var(--t2);}
+.ue:last-child{border-bottom:none;padding-bottom:0;}
+.utm{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--t3);min-width:36px;margin-top:1px;}
+.str{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.stc{background:var(--s);border:1px solid var(--b);border-radius:var(--rs);padding:15px 10px;text-align:center;}
+.stn{font-size:1.5rem;font-weight:200;color:var(--t);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;}
+.stl{font-size:0.55rem;letter-spacing:0.12em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;}
+.rb{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:15px;margin-bottom:10px;}
+.rl{font-size:0.58rem;letter-spacing:0.14em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:7px;}
+.ri{width:100%;background:transparent;border:none;outline:none;color:var(--t);font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:300;resize:none;min-height:60px;line-height:1.6;}
+.ri::placeholder{color:var(--t3);}
+.shc{background:linear-gradient(160deg,var(--v3),rgba(0,0,0,0));border:1px solid var(--v1);border-radius:var(--r);padding:18px;margin-top:12px;text-align:center;}
+.shu{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--v2);background:rgba(0,0,0,0.3);border:1px solid var(--b2);border-radius:7px;padding:8px 12px;margin:10px 0;cursor:pointer;}
+.xpp{position:fixed;top:76px;left:50%;transform:translateX(-50%) translateY(-16px);background:rgba(20,30,60,0.96);border:1px solid var(--v1);border-radius:100px;padding:9px 18px;font-size:0.76rem;color:var(--v2);font-family:'DM Mono',monospace;letter-spacing:0.1em;z-index:100;opacity:0;transition:all 0.38s cubic-bezier(0.16,1,0.3,1);pointer-events:none;backdrop-filter:blur(12px);}
+.xpp.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── LIGHT THEME ── */
+body.light{--bg:#f5f7fb;--s:rgba(0,0,0,0.04);--s2:rgba(0,0,0,0.07);
+  --b:rgba(0,0,0,0.08);--b2:rgba(0,0,0,0.14);
+  --t:#1a1f36;--t2:rgba(26,31,54,0.6);--t3:rgba(26,31,54,0.35);
+  --v1:#2563ff;--v2:#0066dd;--v3:rgba(37,99,255,0.10);}
+body.light .topbar{background:rgba(245,247,251,0.92);}
+body.light .bnav{background:rgba(245,247,251,0.92);}
+body.light .orb{opacity:0.3 !important;}
+body.light .hx{border-color:rgba(0,0,0,0.04) !important;}
+body.light #tess{opacity:0.03 !important;}
+body.light .cx-label,.light .cx-label-sm,.light .cx-why-text{text-shadow:none;}
+body.light .msg.ai .mb{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.08);}
+body.light .msg.user .mb{background:rgba(37,99,255,0.08);border-color:rgba(37,99,255,0.2);}
+body.light .noor-card{background:rgba(0,0,0,0.02);}
+body.light .noor-card.has-items{background:rgba(37,99,255,0.04);}
+body.light .ia{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.12);}
+
+/* ── TIME BADGE ── */
+.q-time{display:inline-flex;align-items:center;gap:3px;font-family:'DM Mono',monospace;font-size:0.58rem;
+  color:var(--v2);background:var(--v3);padding:2px 7px;border-radius:6px;cursor:pointer;
+  transition:all 0.2s;flex-shrink:0;border:1px solid transparent;}
+.q-time:hover{border-color:var(--v1);background:var(--v1);color:#fff;}
+.q-time svg{width:10px;height:10px;}
+.q-time-picker{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
+.q-time-opt{font-family:'DM Mono',monospace;font-size:0.6rem;padding:4px 8px;border-radius:6px;
+  background:var(--s);border:1px solid var(--b2);color:var(--t2);cursor:pointer;transition:all 0.15s;}
+.q-time-opt:hover,.q-time-opt.sel{background:var(--v1);color:#fff;border-color:var(--v1);}
+
+/* ── TIME FILTER BAR ── */
+.time-filter{display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:10px 12px;
+  background:var(--s);border:1px solid var(--b);border-radius:var(--rs);overflow-x:auto;}
+.time-filter-label{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);text-transform:uppercase;
+  letter-spacing:1px;white-space:nowrap;margin-right:4px;}
+.tf-btn{font-family:'DM Mono',monospace;font-size:0.68rem;padding:6px 12px;border-radius:20px;
+  background:transparent;border:1px solid var(--b2);color:var(--t2);cursor:pointer;
+  transition:all 0.2s;white-space:nowrap;}
+.tf-btn:hover{border-color:var(--v1);color:var(--v2);}
+.tf-btn.active{background:linear-gradient(135deg,var(--v1),var(--v2));border-color:transparent;color:#fff;font-weight:400;}
+.tf-total{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--t3);margin-left:auto;white-space:nowrap;}
+.qc.time-hidden{opacity:0.2;transform:scale(0.97);pointer-events:none;max-height:40px;overflow:hidden;transition:all 0.3s;}
+
+/* ── DO PHASE TABS ── */
+.do-tabs{display:flex;gap:4px;margin-bottom:14px;}
+.do-tab{flex:1;padding:9px;text-align:center;font-size:0.72rem;font-weight:400;
+  background:var(--s);border:1px solid var(--b);border-radius:var(--rs);
+  cursor:pointer;color:var(--t3);transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.do-tab:hover{color:var(--t2);border-color:var(--b2);}
+.do-tab.active{background:var(--v3);border-color:var(--v1);color:var(--v2);font-weight:500;}
+
+/* ── WEEKLY PLANNER ── */
+.planner{display:none;margin-bottom:16px;}
+.planner.vis{display:block;}
+.planner-week{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;}
+.planner-week::-webkit-scrollbar{height:2px;}
+.planner-week::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
+.planner-day{min-width:110px;flex-shrink:0;background:var(--s);border:1px solid var(--b);
+  border-radius:var(--rs);padding:10px;display:flex;flex-direction:column;gap:6px;transition:border-color 0.2s;}
+.planner-day.today{border-color:var(--v1);background:var(--v3);}
+.planner-day-hdr{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--t3);text-transform:uppercase;
+  letter-spacing:1px;display:flex;justify-content:space-between;align-items:center;}
+.planner-day-hdr .day-total{color:var(--v2);}
+.planner-day.today .planner-day-hdr{color:var(--v2);}
+.planner-task{font-size:0.68rem;color:var(--t2);padding:5px 7px;background:var(--s2);border-radius:6px;
+  line-height:1.3;display:flex;justify-content:space-between;align-items:center;gap:4px;}
+.planner-task .pt-time{font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--t3);flex-shrink:0;}
+.planner-task.done{opacity:0.4;text-decoration:line-through;}
+.planner-empty{font-size:0.62rem;color:var(--t3);font-style:italic;padding:4px 0;}
+.planner-add{font-size:0.62rem;color:var(--v2);cursor:pointer;padding:4px 0;opacity:0.6;transition:opacity 0.2s;}
+.planner-add:hover{opacity:1;}
+
+/* ── QUICK TASK MODE TOGGLE ── */
+.mode-toggle{display:flex;gap:0;margin-bottom:16px;background:var(--s);border:1px solid var(--b);border-radius:var(--rs);overflow:hidden;}
+.mode-opt{flex:1;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s;border:none;background:transparent;
+  font-family:'DM Sans',sans-serif;color:var(--t3);font-size:0.78rem;}
+.mode-opt:first-child{border-right:1px solid var(--b);}
+.mode-opt.sel{background:var(--v3);color:var(--v2);font-weight:500;}
+.mode-opt .mode-emoji{font-size:1.1rem;display:block;margin-bottom:3px;}
+.mode-opt .mode-desc{font-size:0.6rem;color:var(--t3);margin-top:2px;}
+.mode-opt.sel .mode-desc{color:var(--v2);opacity:0.7;}
+.quick-why-bar{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;animation:si 0.3s ease;}
+.quick-why-chip{font-size:0.74rem;padding:8px 14px;border-radius:20px;background:var(--s);
+  border:1px solid var(--b2);color:var(--t2);cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.quick-why-chip:hover{border-color:var(--v1);color:var(--v2);}
+.quick-why-chip.sel{background:linear-gradient(135deg,var(--v1),var(--v2));border-color:transparent;color:#fff;}
+
+/* ── TUTORIAL WALKTHROUGH ── */
+.tut-overlay{display:none;position:fixed;inset:0;z-index:500;pointer-events:none;}
+.tut-overlay.vis{display:block;}
+.tut-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.7);pointer-events:auto;transition:opacity 0.3s;}
+.tut-spotlight{position:absolute;border-radius:16px;box-shadow:0 0 0 4000px rgba(0,0,0,0.72);
+  transition:all 0.45s cubic-bezier(0.16,1,0.3,1);z-index:501;pointer-events:none;}
+.tut-pulse{animation:tutPulse 2s ease-in-out infinite;}
+@keyframes tutPulse{0%,100%{box-shadow:0 0 0 4000px rgba(0,0,0,0.72),0 0 0 0 rgba(37,99,255,0.4)}
+  50%{box-shadow:0 0 0 4000px rgba(0,0,0,0.72),0 0 0 8px rgba(37,99,255,0.2)}}
+.tut-card{position:absolute;z-index:502;background:var(--bg);border:1px solid var(--v1);
+  border-radius:var(--r);padding:18px 20px;max-width:300px;width:calc(100vw - 40px);
+  pointer-events:auto;animation:si 0.35s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);}
+.tut-step-num{font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--v2);
+  letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;}
+.tut-title{font-size:1rem;font-weight:600;margin-bottom:6px;line-height:1.3;}
+.tut-desc{font-size:0.82rem;color:var(--t2);line-height:1.55;font-weight:300;margin-bottom:14px;}
+.tut-btns{display:flex;gap:8px;align-items:center;}
+.tut-next{flex:1;background:linear-gradient(135deg,var(--v1),var(--v2));border:none;border-radius:10px;
+  padding:10px;color:#fff;font-size:0.8rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:all 0.2s;text-align:center;}
+.tut-next:hover{opacity:0.9;transform:translateY(-1px);}
+.tut-back{background:var(--s);border:1px solid var(--b2);border-radius:10px;padding:10px 14px;
+  color:var(--t2);font-size:0.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.tut-back:hover{border-color:var(--v1);color:var(--t);}
+.tut-skip{background:none;border:none;color:var(--t3);font-size:0.72rem;cursor:pointer;
+  font-family:'DM Sans',sans-serif;padding:6px 0;margin-left:auto;}
+.tut-skip:hover{color:var(--t2);}
+.tut-dots{display:flex;gap:5px;justify-content:center;margin-top:12px;}
+.tut-dot{width:6px;height:6px;border-radius:50%;background:var(--s2);transition:all 0.2s;}
+.tut-dot.active{background:var(--v2);width:18px;border-radius:3px;}
+
+/* Help button */
+.help-btn{position:fixed;bottom:76px;right:14px;z-index:90;width:34px;height:34px;border-radius:50%;
+  background:var(--s);border:1px solid var(--b2);color:var(--t3);font-size:0.84rem;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;backdrop-filter:blur(8px);font-family:'DM Sans',sans-serif;}
+.help-btn:hover{border-color:var(--v1);color:var(--v2);background:var(--v3);}
+
+/* ── OBSTACLE SOLUTIONS ── */
+.obs-pair{padding:5px 0 7px;border-bottom:1px solid var(--b);}
+.obs-pair:last-child{border-bottom:none;padding-bottom:0;}
+.obs-text{font-size:0.74rem;color:rgba(255,140,140,0.85);line-height:1.4;}
+.obs-fix{display:flex;align-items:flex-start;gap:5px;margin-top:4px;padding:5px 8px;
+  background:rgba(37,99,255,0.06);border:1px solid rgba(37,99,255,0.12);border-radius:8px;
+  animation:si 0.3s cubic-bezier(0.16,1,0.3,1);}
+.obs-fix-text{font-size:0.68rem;color:var(--v2);line-height:1.4;flex:1;}
+.obs-fix-edit{font-size:0.56rem;color:var(--t3);cursor:pointer;flex-shrink:0;padding:2px 5px;
+  border-radius:4px;transition:all 0.15s;font-family:'DM Mono',monospace;}
+.obs-fix-edit:hover{color:var(--v2);background:var(--v3);}
+.obs-fix-inp{width:100%;font-size:0.68rem;padding:5px 8px;background:var(--s);
+  border:1px solid var(--v1);border-radius:8px;color:var(--t);font-family:'DM Sans',sans-serif;
+  outline:none;margin-top:4px;}
+.obs-loading{font-size:0.62rem;color:var(--t3);font-style:italic;margin-top:3px;}
+.cx-fix-label{font-size:0.5rem;color:var(--v2);max-width:80px;text-align:center;line-height:1.2;
+  margin-top:1px;font-family:'DM Mono',monospace;opacity:0.7;}
+.quest-obs-reminder{margin:6px 0;padding:8px 10px;background:rgba(255,77,109,0.05);
+  border:1px solid rgba(255,77,109,0.12);border-radius:8px;font-size:0.72rem;line-height:1.45;}
+.qor-label{font-family:'DM Mono',monospace;font-size:0.52rem;color:rgba(255,140,140,0.55);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.qor-obstacle{color:rgba(255,140,140,0.7);font-size:0.7rem;}
+.qor-fix{color:var(--v2);font-size:0.7rem;margin-top:2px;}
+
+/* ── 168 HOUR TIME BUDGET ── */
+.tb-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b);}
+.tb-row:last-child{border-bottom:none;}
+.tb-label{font-size:0.78rem;color:var(--t2);min-width:80px;}
+.tb-slider{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--s2);outline:none;}
+.tb-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:linear-gradient(135deg,var(--v1),var(--v2));cursor:pointer;border:2px solid var(--bg);}
+.tb-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;
+  background:linear-gradient(135deg,var(--v1),var(--v2));cursor:pointer;border:2px solid var(--bg);}
+.tb-val{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--v2);min-width:36px;text-align:right;}
+.tb-icon{font-size:1rem;min-width:22px;text-align:center;}
+.tb-avail{text-align:center;padding:14px;border-radius:var(--rs);margin-top:8px;}
+.tb-avail-num{font-size:1.8rem;font-weight:200;line-height:1;}
+.tb-avail-label{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;}
+.tb-avail.good{background:rgba(37,99,255,0.06);border:1px solid rgba(37,99,255,0.15);}
+.tb-avail.good .tb-avail-num{color:var(--v2);}
+.tb-avail.tight{background:rgba(255,180,0,0.06);border:1px solid rgba(255,180,0,0.15);}
+.tb-avail.tight .tb-avail-num{color:#ffb400;}
+.tb-avail.over{background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.15);}
+.tb-avail.over .tb-avail-num{color:#ff4d6d;}
+.tb-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;margin-top:10px;background:var(--s);}
+.tb-seg{height:100%;transition:width 0.3s;}
+
+/* ── MONEY BUDGET ── */
+.mb-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b);font-size:0.8rem;}
+.mb-item:last-child{border-bottom:none;}
+.mb-name{color:var(--t2);}
+.mb-cost{font-family:'DM Mono',monospace;color:var(--t);font-weight:400;}
+.mb-del{color:var(--t3);cursor:pointer;font-size:0.7rem;margin-left:8px;padding:2px 6px;border-radius:4px;transition:all 0.15s;}
+.mb-del:hover{color:#ff4d6d;background:rgba(255,77,109,0.1);}
+
+/* ── TEAM ── */
+.team-card{display:flex;align-items:center;gap:10px;padding:12px;background:var(--s);border:1px solid var(--b);
+  border-radius:var(--rs);margin-bottom:8px;transition:border-color 0.2s;}
+.team-card:hover{border-color:var(--b2);}
+.team-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:0.82rem;font-weight:600;color:white;flex-shrink:0;}
+.team-avatar.parent{background:#7B2FFF;}.team-avatar.teacher{background:#2563ff;}
+.team-avatar.friend{background:#00c896;}.team-avatar.mentor{background:#ff6b35;}
+.team-avatar.teammate{background:#5B9BD5;}
+.team-info{flex:1;}
+.team-name{font-size:0.84rem;font-weight:500;}
+.team-role-tag{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);text-transform:uppercase;letter-spacing:1px;}
+.team-assign{font-size:0.68rem;color:var(--v2);cursor:pointer;padding:4px 10px;border-radius:8px;
+  border:1px solid var(--v1);background:transparent;transition:all 0.15s;font-family:'DM Sans',sans-serif;}
+.team-assign:hover{background:var(--v3);}
+.team-remove{color:var(--t3);cursor:pointer;font-size:0.68rem;padding:4px 6px;}
+.team-remove:hover{color:#ff4d6d;}
+.team-quest-tag{font-size:0.6rem;padding:2px 7px;border-radius:6px;background:var(--v3);color:var(--v2);
+  font-family:'DM Mono',monospace;margin-top:3px;display:inline-block;}
+.team-comment{padding:10px;background:var(--s);border:1px solid var(--b);border-radius:var(--rs);
+  margin-bottom:6px;animation:si 0.3s ease;}
+.tc-header{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.tc-name{font-size:0.74rem;font-weight:500;}
+.tc-time{font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--t3);}
+.tc-text{font-size:0.78rem;color:var(--t2);line-height:1.45;}
+
+/* ── LOGIN OVERLAY ── */
+.login-overlay{display:none;position:fixed;inset:0;z-index:600;background:var(--bg);
+  flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.login-overlay.vis{display:flex;}
+.login-logo{margin-bottom:24px;}
+.login-title{font-size:1.3rem;font-weight:200;margin-bottom:6px;}
+.login-title strong{font-weight:700;}
+.login-sub{font-size:0.84rem;color:var(--t2);margin-bottom:28px;max-width:300px;line-height:1.5;}
+.login-field{width:100%;max-width:300px;margin-bottom:12px;}
+.login-field label{display:block;font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);
+  text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;text-align:left;}
+.login-field input{width:100%;padding:13px 16px;background:var(--s);border:1px solid var(--b2);
+  border-radius:12px;color:var(--t);font-family:'DM Mono',monospace;font-size:0.92rem;
+  font-weight:400;letter-spacing:0.1em;text-transform:uppercase;outline:none;text-align:center;transition:border-color 0.2s;}
+.login-field input:focus{border-color:var(--v1);}
+.login-field input.name-inp{font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;font-weight:300;font-size:0.88rem;}
+.login-btn{width:100%;max-width:300px;padding:14px;background:linear-gradient(135deg,var(--v1),var(--v2));
+  border:none;border-radius:12px;color:#fff;font-size:0.88rem;font-weight:500;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all 0.2s;margin-top:4px;}
+.login-btn:hover{opacity:0.9;transform:translateY(-1px);}
+.login-btn:disabled{opacity:0.3;cursor:not-allowed;transform:none;}
+.login-err{color:#ff4d6d;font-size:0.78rem;margin-top:8px;min-height:20px;}
+.login-demo{color:var(--t3);font-size:0.76rem;margin-top:20px;cursor:pointer;transition:color 0.2s;}
+.login-demo:hover{color:var(--v2);}
+
+/* ── PROJECT PICKER ── */
+.picker-overlay{display:none;position:fixed;inset:0;z-index:550;background:var(--bg);
+  flex-direction:column;padding:24px;overflow-y:auto;}
+.picker-overlay.vis{display:flex;}
+.picker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.picker-user{font-size:0.78rem;color:var(--t2);}
+.picker-logout{font-size:0.72rem;color:var(--t3);cursor:pointer;padding:6px 12px;
+  border:1px solid var(--b2);border-radius:8px;background:none;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.picker-logout:hover{color:#ff4d6d;border-color:rgba(255,77,109,0.3);}
+.picker-section{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);
+  text-transform:uppercase;letter-spacing:1.5px;margin:16px 0 10px;}
+.proj-card{padding:14px;background:var(--s);border:1px solid var(--b);border-radius:var(--rs);
+  margin-bottom:8px;cursor:pointer;transition:all 0.2s;}
+.proj-card:hover{border-color:var(--v1);background:var(--v3);}
+.proj-card-name{font-size:0.88rem;font-weight:500;margin-bottom:3px;}
+.proj-card-meta{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--t3);}
+.proj-card-shared{font-size:0.58rem;color:var(--v2);background:var(--v3);
+  padding:2px 7px;border-radius:6px;font-family:'DM Mono',monospace;display:inline-block;margin-top:4px;}
+
+</style>
+</head>
+<body>
+
+<!-- Login Overlay -->
+<div class="login-overlay vis" id="login-overlay">
+  <div class="login-logo">
+    <svg width="120" height="54" viewBox="0 0 160 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(48,0)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#5B9BD5"/></g>
+      <g transform="translate(76,0)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#7DB8E0"/></g>
+      <g transform="translate(104,0)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#A8D4EB"/></g>
+      <g transform="translate(6,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#0F1E3D"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">D</text></g>
+      <g transform="translate(34,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#1E3A6E"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">S</text></g>
+      <g transform="translate(62,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#3A6FA0" stroke="#5B9BD5" stroke-width="1.5"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">I</text></g>
+      <g transform="translate(90,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#5B9BD5"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">D</text></g>
+      <g transform="translate(118,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#7DB8E0"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">R</text></g>
+      <g transform="translate(20,40)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#0F1E3D"/></g>
+      <g transform="translate(48,40)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#1E3A6E"/></g>
+      <g transform="translate(76,40)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#3A6FA0"/></g>
+      <g transform="translate(104,40)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#5B9BD5"/></g>
+    </svg>
+  </div>
+  <div class="login-title">Welcome to <strong>DSIDR</strong></div>
+  <div class="login-sub">Enter your trial access code to start building and saving projects.</div>
+  <div class="login-field">
+    <label>Access Code</label>
+    <input id="login-code" placeholder="DSIDR-XXXX-0000" maxlength="20" onkeydown="if(event.key==='Enter')doLogin()">
+  </div>
+  <div class="login-field">
+    <label>Your Name (optional)</label>
+    <input id="login-name" class="name-inp" placeholder="First name or nickname" onkeydown="if(event.key==='Enter')doLogin()">
+  </div>
+  <button class="login-btn" id="login-btn" onclick="doLogin()">Enter</button>
+  <div class="login-err" id="login-err"></div>
+  <div class="login-demo" onclick="skipLogin()">or try the demo without an account</div>
+</div>
+
+<!-- Project Picker -->
+<div class="picker-overlay" id="picker-overlay">
+  <div class="picker-header">
+    <div>
+      <div style="font-size:1.1rem;font-weight:600;">Your Projects</div>
+      <div class="picker-user" id="picker-user"></div>
+    </div>
+    <button class="picker-logout" onclick="doLogout()">Log out</button>
+  </div>
+  <button class="cbtn" onclick="closePicker()" style="margin-bottom:12px;">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    New Project
+  </button>
+  <div class="picker-section">My Projects</div>
+  <div id="picker-owned"></div>
+  <div class="picker-section">Shared With Me</div>
+  <div id="picker-shared"></div>
+</div>
+<div id="amb"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+<div id="hf"></div>
+<svg id="tess" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="20" y="20" width="260" height="260" stroke="#2563ff" stroke-width="1"/>
+  <rect x="75" y="75" width="150" height="150" stroke="#4d8aff" stroke-width="1"/>
+  <line x1="20" y1="20" x2="75" y2="75" stroke="#2563ff"/><line x1="280" y1="20" x2="225" y2="75" stroke="#2563ff"/>
+  <line x1="20" y1="280" x2="75" y2="225" stroke="#2563ff"/><line x1="280" y1="280" x2="225" y2="225" stroke="#2563ff"/>
+  <circle cx="150" cy="150" r="55" stroke="#00d4ff" stroke-width="0.5" stroke-dasharray="4 6"/>
+  <circle cx="150" cy="150" r="4" fill="#00d4ff"/>
+</svg>
+
+<div id="app">
+  <div class="topbar">
+    <div class="wm"><svg width="90" height="40" viewBox="0 0 160 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(48,0)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#5B9BD5"/></g>
+<g transform="translate(76,0)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#7DB8E0"/></g>
+<g transform="translate(104,0)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#A8D4EB"/></g>
+<g transform="translate(6,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#0F1E3D"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">D</text></g>
+<g transform="translate(34,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#1E3A6E"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">S</text></g>
+<g transform="translate(62,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#3A6FA0" stroke="#5B9BD5" stroke-width="1.5"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">I</text></g>
+<g transform="translate(90,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#5B9BD5"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">D</text></g>
+<g transform="translate(118,20)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#7DB8E0"/><text x="13" y="19" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="700">R</text></g>
+<g transform="translate(20,40)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#0F1E3D"/></g>
+<g transform="translate(48,40)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#1E3A6E"/></g>
+<g transform="translate(76,40)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#3A6FA0"/></g>
+<g transform="translate(104,40)"><polygon points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5" fill="#5B9BD5"/></g>
+</svg></div>
+    <div class="tr2">
+      <div class="xpw">
+        <div class="lvlb">Lvl 4</div>
+        <div class="xpo"><div class="xpi" id="xpi" style="width:62%"></div></div>
+        <div class="xpn" id="xpn">620 XP</div>
+      </div>
+      <div class="av" id="theme-toggle" onclick="toggleTheme()" title="Switch theme"><svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="sc active" id="sc-home">
+    <div class="hero">
+      <div style="font-size:0.6rem;letter-spacing:0.18em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:5px;">Welcome 👋</div>
+      <h1 style="font-size:1.3rem;font-weight:200;line-height:1.3;margin-bottom:9px;">Ready to <strong>build something?</strong></h1>
+      <div class="aib"><div class="aid"></div>Real AI Coach · Powered by Claude</div>
+    </div>
+    <div class="slbl">Your projects</div>
+    <div class="slbl" style="margin-bottom:6px;">Example project</div>
+    <div class="pc" id="demo-proj" onclick="loadDemo()">
+      <div class="pt2"><div class="pnm">🌤️ Solar Weather Station</div><div class="pph" style="background:rgba(0,200,150,0.12);border-color:rgba(0,200,150,0.3);color:#4ade80;">COMPLETE</div></div>
+      <div class="pb2"><div class="pf2" style="width:100%"></div></div>
+      <div class="pm"><span>100% complete · Maya T.</span><span>Tap to explore →</span></div>
+    </div>
+    <!-- Active project card — shown once a project is started -->
+    <div class="pc" id="active-proj-card" style="display:none;" onclick="go('coach')">
+      <div class="pt2"><div class="pnm" id="active-proj-name">My Project</div><div class="pph" id="active-proj-phase">DEFINE</div></div>
+      <div class="pb2"><div class="pf2" id="active-proj-bar" style="width:2%"></div></div>
+      <div class="pm"><span id="active-proj-pct">Just started</span><span id="active-proj-tmpl"></span></div>
+    </div>
+    <div id="extra-projs"></div>
+    <button class="addb" onclick="go('new')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Start a new project
+    </button>
+  </div>
+
+  <!-- NEW PROJECT -->
+  <div class="sc" id="sc-new">
+    <button onclick="go('home')" style="display:flex;align-items:center;gap:5px;font-size:0.74rem;color:var(--t3);cursor:pointer;margin-bottom:18px;border:none;background:none;font-family:'DM Sans',sans-serif;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back
+    </button>
+    <div class="ey"><div class="eyd"></div><div class="eyt">New Project</div></div>
+    <h1 class="ttl">What are you <strong>building?</strong></h1>
+    <p class="sub">Pick a template, name it, and your real AI coach will guide you through the rest.</p>
+
+    <!-- Mode toggle -->
+    <div class="mode-toggle">
+      <button class="mode-opt sel" id="mode-full" onclick="setMode('full')">
+        <span class="mode-emoji">&#x1f680;</span>Full Project
+        <span class="mode-desc">Guided planning + tasks</span>
+      </button>
+      <button class="mode-opt" id="mode-quick" onclick="setMode('quick')">
+        <span class="mode-emoji">&#x26a1;</span>Quick Task
+        <span class="mode-desc">Homework, chores, simple stuff</span>
+      </button>
+    </div>
+    <div class="nil" id="full-tpl-label">Template</div>
+    <div class="tmg" id="full-templates">
+      <div class="tc sel" data-t="Science Fair Project" onclick="sT(this)"><span class="tci">🔬</span><div class="tcn">Science Fair</div><div class="tcd">Experiment, hypothesis, results</div></div>
+      <div class="tc" data-t="YouTube Channel" onclick="sT(this)"><span class="tci">🎬</span><div class="tcn">YouTube Channel</div><div class="tcd">Videos, audience, publishing</div></div>
+      <div class="tc" data-t="App or Website" onclick="sT(this)"><span class="tci">💻</span><div class="tcn">App or Website</div><div class="tcd">Code, design, ship it</div></div>
+      <div class="tc" data-t="DIY Hardware Build" onclick="sT(this)"><span class="tci">🔧</span><div class="tcn">DIY Build</div><div class="tcd">Hardware, making, physical</div></div>
+      <div class="tc" data-t="Community Event" onclick="sT(this)"><span class="tci">🤝</span><div class="tcn">Community Event</div><div class="tcd">Organize, promote, run it</div></div>
+      <div class="tc" data-t="Custom Project" onclick="sT(this)"><span class="tci">✦</span><div class="tcn">Blank Canvas</div><div class="tcd">I'll define it myself</div></div>
+    </div>
+    <div class="nil">Project name</div>
+    <input class="nin" id="pname" placeholder="e.g. My weather station, Episode 1, Robot arm…" oninput="chkR()"/>
+    <div class="nil">Timeline</div>
+    <div class="tlr">
+      <div class="tl" data-w="1" onclick="sTl(this)"><span class="tln">1</span><span class="tll">wk</span></div>
+      <div class="tl" data-w="2" onclick="sTl(this)"><span class="tln">2</span><span class="tll">wks</span></div>
+      <div class="tl sel" data-w="4" onclick="sTl(this)"><span class="tln">4</span><span class="tll">wks</span></div>
+      <div class="tl" data-w="6" onclick="sTl(this)"><span class="tln">6</span><span class="tll">wks</span></div>
+      <div class="tl" data-w="12" onclick="sTl(this)"><span class="tln">12</span><span class="tll">wks</span></div>
+    </div>
+    <button class="cbtn" id="startb" onclick="startProj()" disabled>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span id="startb-text">Start with AI Coach &#x2192;</span>
+    </button>
+    <button class="gbtn" onclick="go('home')">Maybe later</button>
+
+    <!-- Quick task templates (hidden by default) -->
+    <div id="quick-templates" style="display:none;margin-top:14px;">
+      <div class="nil">Quick type</div>
+      <div class="tmg">
+        <div class="tc sel" data-t="Homework" onclick="sT(this)"><span class="tci">&#x1f4dd;</span><div class="tcn">Homework</div><div class="tcd">Assignment, essay, reading</div></div>
+        <div class="tc" data-t="Cleaning" onclick="sT(this)"><span class="tci">&#x1f9f9;</span><div class="tcn">Cleaning</div><div class="tcd">Room, chores, organizing</div></div>
+        <div class="tc" data-t="Errand" onclick="sT(this)"><span class="tci">&#x1f3c3;</span><div class="tcn">Errand</div><div class="tcd">Shopping, pickup, delivery</div></div>
+        <div class="tc" data-t="Practice" onclick="sT(this)"><span class="tci">&#x1f3af;</span><div class="tcn">Practice</div><div class="tcd">Instrument, sport, skill</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COACH -->
+  <div class="sc" id="sc-coach">
+    <div class="ey"><div class="eyd"></div><div class="eyt" id="cpl">Phase 1 · Define</div></div>
+    <h1 class="ttl" id="cttl">Define your <strong>goal</strong></h1>
+    <p class="sub" id="csub">Your AI coach is live. Just talk — it knows the DSIDR framework.</p>
+    <div class="ptk">
+      <div class="ptn active" id="pt0"><div class="ptc">D</div><div class="ptl">Define</div></div>
+      <div class="ptn" id="pt1"><div class="ptc">S</div><div class="ptl">State</div></div>
+      <div class="ptn" id="pt2"><div class="ptc">I</div><div class="ptl">Identify</div></div>
+      <div class="ptn" id="pt3"><div class="ptc">D</div><div class="ptl">Do</div></div>
+      <div class="ptn" id="pt4"><div class="ptc">R</div><div class="ptl">Review</div></div>
+    </div>
+    <div class="pills"><div class="pill active" id="pl0"></div><div class="pill" id="pl1"></div><div class="pill" id="pl2"></div></div>
+    <div class="aib" id="ai-badge" onclick="promptApiKey()" style="cursor:pointer;" title="Tap to connect AI"><div class="aid" id="ai-dot"></div><span id="ai-label">Live AI · Claude Sonnet</span></div>
+
+    <!-- NOOR Grid — visible only during Identify phase, ABOVE chat -->
+    <div id="noor-panel" style="display:none;margin-bottom:12px;">
+      <div style="font-size:0.58rem;letter-spacing:0.16em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:8px;">Tap to select &middot; tap + to add your own</div>
+      <div class="noor-grid">
+        <div class="noor-card" id="noor-needs">
+          <div class="noor-label">Needs</div>
+          <div id="noor-needs-list"><span class="noor-empty">Tap suggestions below&hellip;</span></div>
+          <div class="noor-suggestions" id="noor-needs-sug"></div>
+        </div>
+        <div class="noor-card" id="noor-opps">
+          <div class="noor-label">Opportunities</div>
+          <div id="noor-opps-list"><span class="noor-empty">Tap suggestions below&hellip;</span></div>
+          <div class="noor-suggestions" id="noor-opps-sug"></div>
+        </div>
+        <div class="noor-card" id="noor-obstacles">
+          <div class="noor-label">Obstacles</div>
+          <div id="noor-obstacles-list"><span class="noor-empty">Tap suggestions below&hellip;</span></div>
+          <div class="noor-suggestions" id="noor-obstacles-sug"></div>
+        </div>
+        <div class="noor-card" id="noor-resources">
+          <div class="noor-label">Resources</div>
+          <div id="noor-resources-list"><span class="noor-empty">Tap suggestions below&hellip;</span></div>
+          <div class="noor-suggestions" id="noor-resources-sug"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat" id="chat"></div>
+    <div class="typing" id="typing">
+      <div class="mi" style="background:linear-gradient(135deg,var(--v1),var(--v2));flex-shrink:0;margin-top:1px;">✦</div>
+      <div class="tdots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+    </div>
+    <button class="stk" id="coach-stuck" onclick="sendStuck()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      I'm stuck — help me figure this out
+    </button>
+
+    <!-- Quick-pick suggestions above input during Identify -->
+    <div class="quick-picks" id="quick-picks">
+      <div class="qp-label" id="qp-label">Suggestions</div>
+      <div class="qp-chips" id="qp-chips"></div>
+    </div>
+
+    <div class="ar" id="ar">
+      <div class="aa" onclick="addLnk()">&#x1F517; Add link</div>
+      <div class="aa" onclick="addImg()">&#x1F5BC; Add image</div>
+    </div>
+    <div class="ia">
+      <textarea class="ita" id="cinp" placeholder="Reply to your coach…" rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+      <div class="ir">
+        <div class="tbtns">
+          <button class="tbtn" id="vbtn" onclick="toggleVoice()" title="Voice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+        </div>
+        <button class="sbtn" id="sndb" onclick="send()">Send →</button>
+      </div>
+    </div>
+    <button class="cbtn" id="nxtb" style="display:none;" onclick="nextPhase()">Continue &#x2192;</button>
+  </div>
+
+  <!-- BRIDGE -->
+  <div class="sc" id="sc-bridge">
+    <div class="ey"><div class="eyd"></div><div class="eyt">Your Plan</div></div>
+    <h1 class="ttl" style="text-align:center;">Your <strong>constellation</strong></h1>
+    <p class="sub" style="text-align:center;margin-bottom:4px;">Everything you need, mapped out.</p>
+    <div id="plan-card-bridge"></div>
+    <button class="cbtn" onclick="startDoPhase()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      I'm ready — let's do this
+    </button>
+    <button class="gbtn" onclick="go('coach')" style="margin-top:8px;">Back to coach</button>
+  </div>
+
+  <!-- DO - QUEST LOG -->
+  <div class="sc" id="sc-do">
+    <div class="ey"><div class="eyd"></div><div class="eyt" id="do-eyebrow">Phase 4 &middot; Do</div></div>
+    <h1 class="ttl">Your <strong>Quest Log</strong></h1>
+    <p class="sub" id="do-sub" style="margin-bottom:16px;"></p>
+
+    <!-- View tabs -->
+    <div class="do-tabs">
+      <div class="do-tab active" id="dt-quests" onclick="switchDoTab('quests')">Quests</div>
+      <div class="do-tab" id="dt-planner" onclick="switchDoTab('planner')">Weekly</div>
+      <div class="do-tab" id="dt-time" onclick="switchDoTab('time')">168hrs</div>
+      <div class="do-tab" id="dt-team" onclick="switchDoTab('team')">Team</div>
+    </div>
+
+    <!-- Time filter -->
+    <div class="time-filter" id="time-filter">
+      <div class="time-filter-label">I have</div>
+      <button class="tf-btn active" onclick="filterTime(0,this)">All</button>
+      <button class="tf-btn" onclick="filterTime(15,this)">15m</button>
+      <button class="tf-btn" onclick="filterTime(30,this)">30m</button>
+      <button class="tf-btn" onclick="filterTime(60,this)">1hr</button>
+      <button class="tf-btn" onclick="filterTime(120,this)">2hr+</button>
+      <div class="tf-total" id="tf-total"></div>
+    </div>
+
+    <!-- Weekly planner view -->
+    <div class="planner" id="planner-view">
+      <div class="planner-week" id="planner-week"></div>
+    </div>
+
+    <!-- 168 Hour Time Budget -->
+    <div id="time-budget-view" style="display:none;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">Your 168 Hours This Week</div>
+      <div id="time-sliders"></div>
+      <div id="time-summary" style="margin-top:14px;padding:14px;background:var(--s);border:1px solid var(--b);border-radius:var(--rs);"></div>
+      <!-- Financial budget (hidden until triggered) -->
+      <div id="money-budget" style="display:none;margin-top:14px;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">Project Budget</div>
+        <div id="money-items"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <input class="task-inp" id="money-item-name" placeholder="Item name..." style="flex:2;">
+          <input class="task-inp" id="money-item-cost" placeholder="$" type="number" style="flex:1;max-width:70px;">
+          <button class="task-add-btn" onclick="addBudgetItem()">Add</button>
+        </div>
+        <div id="money-total" style="margin-top:10px;padding:10px;background:var(--s);border:1px solid var(--b);border-radius:var(--rs);font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--t2);display:flex;justify-content:space-between;"></div>
+      </div>
+    </div>
+
+    <!-- Team / Collaboration -->
+    <div id="team-view" style="display:none;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">Your Team</div>
+      <div id="team-members"></div>
+      <div style="margin-top:12px;padding:14px;background:var(--s);border:1px solid var(--b);border-radius:var(--rs);">
+        <div style="font-size:0.78rem;font-weight:500;margin-bottom:10px;">Add a team member</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;">
+          <input class="task-inp" id="team-name" placeholder="Name...">
+          <select class="task-inp" id="team-role" style="max-width:120px;appearance:none;">
+            <option value="Parent">Parent</option>
+            <option value="Teacher">Teacher</option>
+            <option value="Friend">Friend</option>
+            <option value="Mentor">Mentor</option>
+            <option value="Teammate">Teammate</option>
+          </select>
+        </div>
+        <button class="cbtn" onclick="addTeamMember()" style="font-size:0.78rem;padding:10px;">Add to Team</button>
+      </div>
+      <!-- Comments/encouragement -->
+      <div style="margin-top:14px;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Team Comments</div>
+        <div id="team-comments"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <input class="task-inp" id="team-comment-inp" placeholder="Leave a note for your team..." onkeydown="if(event.key==='Enter')addTeamComment()">
+          <button class="task-add-btn" onclick="addTeamComment()">Post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div id="do-progress" style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <span style="font-size:0.6rem;letter-spacing:0.16em;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;">Progress</span>
+        <span style="font-size:0.72rem;font-family:'DM Mono',monospace;color:var(--v2);" id="do-op">0%</span>
+      </div>
+      <div class="trb" style="height:6px;"><div class="trf" id="do-o" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:0.6rem;color:var(--t3);font-family:'DM Mono',monospace;">
+        <span id="do-done-count">0 done</span><span id="do-total-count">0 quests</span>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="do-loading" style="text-align:center;padding:48px 0;display:none;">
+      <div style="font-size:2rem;margin-bottom:12px;">&#9881;</div>
+      <div style="font-size:0.88rem;color:var(--t2);margin-bottom:8px;">Building your quest log&hellip;</div>
+      <div style="display:flex;justify-content:center;gap:5px;">
+        <div class="td" style="background:var(--v2)"></div>
+        <div class="td" style="background:var(--v2);animation-delay:.15s"></div>
+        <div class="td" style="background:var(--v2);animation-delay:.3s"></div>
+      </div>
+    </div>
+
+    <!-- Quest timeline -->
+    <div id="quest-log" style="display:none;"></div>
+    <button class="kadd" id="quest-add-btn" onclick="addQuest()" style="width:100%;margin-bottom:16px;display:none;">+ add quest</button>
+    <button class="cbtn" id="do-review-btn" onclick="go('review')" style="display:none;">Complete &amp; Review &#x2192;</button>
+  </div>
+
+  <!-- REVIEW -->
+  <div class="sc" id="sc-review">
+    <div class="ey"><div class="eyd"></div><div class="eyt">Phase 5 · Review</div></div>
+    <h1 class="ttl">Look how far <strong>you've come.</strong></h1>
+    <div class="str">
+      <div class="stc"><div class="stn" id="rv-tasks">0</div><div class="stl">Tasks Done</div></div>
+      <div class="stc"><div class="stn" id="rv-pct">0%</div><div class="stl">Complete</div></div>
+      <div class="stc"><div class="stn" id="rv-logs">0</div><div class="stl">Updates</div></div>
+    </div>
+
+    <!-- Plan card — same one from Bridge -->
+    <div id="plan-card-review" style="margin-bottom:16px;"></div>
+
+    <div class="rb"><div class="rl">What went well?</div><textarea class="ri" id="reflect-1" placeholder="What worked better than you expected?"></textarea></div>
+    <div class="rb"><div class="rl">What would you do differently?</div><textarea class="ri" id="reflect-2" placeholder="What would you change if you did it again?"></textarea></div>
+    <div class="rb"><div class="rl">What did you learn about yourself?</div><textarea class="ri" id="reflect-3" placeholder="What surprised you most about doing this project?"></textarea></div>
+    <div class="shc">
+      <div style="font-size:1.4rem;margin-bottom:5px;">🏆</div>
+      <div style="font-size:0.95rem;font-weight:500;margin-bottom:3px;" id="rv-name">Your Project</div>
+      <div style="font-size:0.72rem;color:var(--t2);margin-bottom:10px;" id="rv-meta">Share your journey with others</div>
+      <div class="shu" onclick="cpLink()">tap to copy your project link</div>
+      <button class="cbtn" onclick="showXP('+100 XP · Project shared! 🚀')">Share Project</button>
+    </div>
+    <button class="gbtn" onclick="showXP('+200 XP · New project!');go('new')">Start Next Project</button>
+  </div>
+</div>
+
+<div class="bnav">
+  <div class="bni">
+    <button class="nb active" id="nb-home" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></button>
+    <button class="nb" id="nb-coach" onclick="go('coach')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Coach</span></button>
+    <button class="nb" id="nb-new" onclick="go('new')" style="background:var(--v3);border-radius:18px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>New</span></button>
+    <button class="nb" id="nb-do" onclick="go('do')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Tasks</span></button>
+    <button class="nb" id="nb-review" onclick="go('review')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>Review</span></button>
+  </div>
+</div>
+<div class="xpp" id="xpp"></div>
+
+<!-- Tutorial overlay -->
+<div class="tut-overlay" id="tut-overlay">
+  <div class="tut-spotlight tut-pulse" id="tut-spotlight"></div>
+  <div class="tut-card" id="tut-card">
+    <div class="tut-step-num" id="tut-step-num"></div>
+    <div class="tut-title" id="tut-title"></div>
+    <div class="tut-desc" id="tut-desc"></div>
+    <div class="tut-btns">
+      <button class="tut-back" id="tut-back" onclick="tutPrev()">Back</button>
+      <button class="tut-next" id="tut-next" onclick="tutNext()">Next</button>
+      <button class="tut-skip" onclick="tutEnd()">Skip tour</button>
+    </div>
+    <div class="tut-dots" id="tut-dots"></div>
+  </div>
+</div>
+
+<!-- Help button (always visible after tutorial) -->
+<button class="help-btn" id="help-btn" onclick="tutStart()" title="Tour this app">?</button>
+
+<script>
+// HEX
+const hf=document.getElementById('hf');
+for(let r=0;r<7;r++)for(let c=0;c<9;c++){const d=document.createElement('div');d.className='hx';const sz=32+Math.random()*44;d.style.cssText=`width:${sz}px;height:${sz*1.15}px;left:${c*78+(r%2)*39-18}px;top:${r*70-18}px;animation-delay:${Math.random()*6}s;animation-duration:${4+Math.random()*4}s`;hf.appendChild(d);}
+
+// NAV
+function go(name){
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sc-'+name).classList.add('active');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  const nb=document.getElementById('nb-'+name);if(nb)nb.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  // If returning to Do phase and quests already generated, re-render
+  if(name==='do' && doBuilt){
+    renderQuestLog();
+    updateProgress();
+    showDoUI();
+    var eyebrow = document.getElementById('do-eyebrow');
+    var sub = document.getElementById('do-sub');
+    if(eyebrow) eyebrow.textContent='Phase 4 · Do · '+(projName||'Your Project');
+    if(sub) sub.textContent='Your quest log. Start a quest, log how it went, add a photo — then mark it done.';
+  }
+}
+
+// XP
+let xpV=620;
+function showXP(msg){
+  const p=document.getElementById('xpp');p.textContent=msg;p.classList.add('show');
+  const m=(msg||'').match(/\+(\d+)/);
+  if(m){xpV+=parseInt(m[1]);document.getElementById('xpn').textContent=xpV+' XP';document.getElementById('xpi').style.width=Math.min(100,(xpV%200)/2)+'%';}
+  setTimeout(()=>p.classList.remove('show'),2300);
+}
+
+// STATE
+let tmpl='Science Fair Project',wks=4,projName='',history=[],phase=0;
+let projectPlan = null; // stores the structured plan from Bridge phase
+function sT(c){var grid=c.closest('.tmg');if(grid)grid.querySelectorAll('.tc').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');tmpl=c.dataset.t;chkR();}
+function sTl(c){document.querySelectorAll('.tl').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');wks=parseInt(c.dataset.w);}
+function chkR(){document.getElementById('startb').disabled=!document.getElementById('pname').value.trim();}
+
+// PHASE UI
+const phCfg=[
+  {lbl:"Phase 1 · Define",ttl:"Define your <strong>goal</strong>",sub:"Your AI coach is live. Just talk."},
+  {lbl:"Phase 2 · State",ttl:"State your <strong>why</strong>",sub:"Your AI coach wants to understand what drives this."},
+  {lbl:"Phase 3 · Identify",ttl:"Map your <strong>landscape</strong>",sub:"Needs, opportunities, obstacles, resources."},
+  {lbl:"Bridge · Plan Overview",ttl:"Your plan is <strong>ready</strong>",sub:"Here is what you have built. Ready to start?"},
+];
+function updPhUI(p){
+  const cfg=phCfg[Math.min(p,phCfg.length-1)];
+  document.getElementById('cpl').textContent=cfg.lbl;
+  document.getElementById('cttl').innerHTML=cfg.ttl;
+  document.getElementById('csub').textContent=cfg.sub;
+  for(let i=0;i<5;i++){const n=document.getElementById('pt'+i);if(!n)continue;n.classList.remove('active','done');if(i===p)n.classList.add('active');else if(i<p)n.classList.add('done');}
+  for(let i=0;i<3;i++){const pl=document.getElementById('pl'+i);if(!pl)continue;pl.className='pill'+(i<p?' done':i===p?' active':'');}
+  // Bridge phase — highlight the 4th dot (index 3) as the bridge step
+  const pt3=document.getElementById('pt3');
+  if(pt3){
+    const pt3lbl=pt3.querySelector('.ptl');
+    const pt3c=pt3.querySelector('.ptc');
+    if(p===3){pt3c.textContent='⦾';if(pt3lbl)pt3lbl.textContent='Bridge';}
+    else{pt3c.textContent='D';if(pt3lbl)pt3lbl.textContent='Do';}
+  }
+  // Show/hide elements based on phase
+  const isBridge  = p === 3;
+  const isIdentify = p === 2;
+  const stkEl  = document.getElementById('coach-stuck');
+  const arEl   = document.getElementById('ar');
+  const noorEl = document.getElementById('noor-panel');
+  if(stkEl)  stkEl.style.display  = isBridge ? 'none' : 'flex';
+  if(arEl)   arEl.style.display   = isBridge ? 'none' : 'flex';
+  if(noorEl) noorEl.style.display = isIdentify ? 'block' : 'none';
+  var qpEl = document.getElementById('quick-picks');
+  if(qpEl) qpEl.classList.toggle('vis', isIdentify);
+  if(isIdentify) populateNoorSuggestions();
+}
+
+// SYSTEM PROMPT — intelligently adaptive coaching
+function getSys(){
+  const phaseInstructions = [
+
+    // Phase 0 — DEFINE
+    `You are evaluating whether the user has clearly DEFINED their project goal.
+
+A goal is considered COMPLETE when it has ALL THREE of these:
+1. WHAT — a specific description of what they are building or creating (not vague like "a project about science")
+2. DONE — a clear picture of what will exist or be achieved when finished (a working app, a video, a winning experiment, etc.)
+3. WHEN — a timeline or deadline, even approximate
+
+YOUR BEHAVIOR:
+- Read the full conversation carefully before responding
+- If the user's FIRST message already contains all three elements clearly, acknowledge it and signal [PHASE_COMPLETE] immediately — do not drag it out
+- If one or two elements are missing or too vague, ask a single focused question to get the missing piece
+- If the goal is genuinely vague (e.g. "I want to do a science project"), ask what specifically they want to build
+- If the timeline is missing but everything else is clear, ask for it
+- Never ask for something they have already told you
+- Never ask more than one question at a time
+- Do NOT ask about their why, motivation, feelings, needs, obstacles, or resources — strictly goal only
+
+VAGUENESS EXAMPLES that need follow-up:
+- "I want to make an app" → missing: what it does, what done looks like, timeline
+- "A science fair project about plants" → missing: what specifically, what the result will be
+- "Build something cool" → missing: everything, ask what they want to build
+
+COMPLETE EXAMPLES that should get [PHASE_COMPLETE]:
+- "I want to build a weather station with a Raspberry Pi that shows live temperature data on a website, for my science fair in 6 weeks"
+- "I'm making a YouTube channel about cooking for teens, I want to post my first 3 videos in a month"
+- "I'm building a mobile app that helps students find study partners at my school, I want to launch it in 8 weeks"`,
+
+    // Phase 1 — STATE
+    `You are in the STATE phase. Your job is to capture why this project matters to the user — quickly.
+
+THE RULE: One question, one follow-up at most. Then move on.
+
+HOW IT WORKS:
+- Ask why this matters to them. One question, casual.
+- Whatever they say, take it seriously. Reflect it back in one sentence that makes it feel real and important.
+- If their answer has genuine emotion or specificity ("my grandma got heat exhaustion" or "I want to prove I can actually build something"), that is ENOUGH. Signal [PHASE_COMPLETE] immediately.
+- If their answer is truly surface-level ("because I have to" or "idk"), ask ONE follow-up: "No wrong answer — what would it mean to you if you actually finished this?" Then accept whatever they say and signal [PHASE_COMPLETE].
+- NEVER ask more than 2 questions total in this phase. Kids will bail.
+
+DO NOT:
+- Dig for deeper meaning if they already gave you something real
+- Ask multiple follow-ups
+- Treat brief answers as problems — some kids express motivation in 5 words
+- Re-ask about the goal
+- Ask about needs, resources, or logistics
+
+The why does not need to be profound. "I want a good grade" is a valid why. "My mom would be proud" is a valid why. Accept it, reflect it, move on.
+
+Signal [PHASE_COMPLETE] after your response to their first or second answer.`,
+
+    // Phase 2 — IDENTIFY
+    `You are helping the user IDENTIFY their Needs, Opportunities, Obstacles, and Resources (NOOR).
+
+The user sees a grid of four cards (Needs, Opportunities, Obstacles, Resources) with tappable suggestion chips they can select. They can also type custom items or talk to you about them.
+
+Each area is defined as:
+- NEEDS: things required to complete the project (materials, skills, tools, money, time, help)
+- OPPORTUNITIES: advantages they have, good timing, connections, skills they already possess
+- OBSTACLES: things that could block progress or make it hard
+- RESOURCES: what they already have access to (people, tools, space, budget, time)
+
+YOUR BEHAVIOR — BE A STRATEGIC THINKER, NOT A PARROT:
+- Do NOT just repeat back what they selected. Instead, CONNECT the dots between items.
+- When they select a Need and a Resource, point out the connection: "You need lab equipment and you have makerspace access — that covers a lot right there."
+- When they select an Obstacle, immediately ask how their Resources or Opportunities could help solve it: "Budget is tight, but you mentioned your mom is covering half — how far does that get you?"
+- If they are tapping chips quickly, DO NOT list what they tapped. Instead, give one insight about what you see: "You have more resources than obstacles — that is a really good sign."
+- Your job is to help them SEE the path, not just collect items. Every response should move them closer to feeling like "I can actually do this."
+- Guide them toward empty categories naturally. If Obstacles is empty, say something like "This all sounds doable so far — what is the one thing that could trip you up?"
+- Keep responses to 1-3 sentences. Be the friend who sees the big picture.
+- When all 4 areas have items, give a SHORT synthesis (not a list): "You know what you need, you have solid resources to cover most of it, and the main thing to watch is X. You have a real plan here."
+- Then signal [PHASE_COMPLETE]
+- Do NOT re-ask about the goal or why — those are done`,
+
+    // Phase 3 — BRIDGE
+    `Your job is to synthesize everything from the conversation into a PLAN that shows a clear path to completion, then return it as JSON.
+
+Do NOT just restate what the user said. Instead, BUILD a plan:
+- Connect needs to resources (what is already covered vs what still needs solving)
+- Turn obstacles into specific action items (not just "budget is tight" but "compare prices on 3 sites to stay under $75")
+- Sequence the work — what comes first, what depends on what
+- Make the "why" feel like fuel, not a checkbox
+
+Return ONLY this exact format — no other text, no markdown fences:
+{
+  "plan": {
+    "goal": "What they are building and what done looks like — specific and concrete",
+    "why": "Their personal motivation — use their actual words, make it feel real",
+    "needs": "What they still need to figure out or get. Skip anything already covered by their resources.",
+    "resources": "What they already have that gives them an advantage — frame it positively",
+    "obstacles": "The main challenge AND a specific first step to handle it. Not just the problem — the move."
+  },
+  "message": "A 2-3 sentence message that does NOT list their NOOR items back. Instead, paint the picture: here is what their project looks like when it works, why they are the right person to do it, and what their first move should be. Make them feel like the path is clear and they are ready. Use their actual words and details."
+}
+
+Be specific — use real details from the conversation. Generic plans are useless.
+The message should make them think "okay, I can see exactly how this happens."
+
+Then end your full response with exactly: [PHASE_COMPLETE]`,
+  ];
+
+  const currentInstructions = phaseInstructions[Math.min(phase, phaseInstructions.length - 1)];
+
+  return `You are DSIDR Coach — an AI project coach built specifically for middle schoolers (ages 11-14). You are like a cool, encouraging older friend who has built stuff before and genuinely wants to help them pull this off.
+
+YOUR VOICE AND TONE:
+- Sound like a real person texting, not a teacher writing on a whiteboard
+- Be enthusiastic and genuine — middle schoolers can smell fake hype instantly
+- Use casual, everyday language — short sentences, contractions, natural rhythm
+- It is OK to say things like "Okay so", "Wait that is actually so cool", "Ooh I like that", "Real talk", "No pressure but..."
+- Use emoji naturally — the way a teenager would, not decoratively. 1-2 per message max.
+- NEVER use words like: leverage, framework, articulate, optimal, iterative, stakeholders, robust, utilize
+- NEVER sound like a guidance counselor, a corporate trainer, or a motivational poster
+- NEVER start a response with "Great!" or "Excellent!" — that is teacher talk and kids hate it
+- DO say things that feel real: "That is a solid idea", "I love that you already know what you want to build", "Okay this is going to be fun"
+
+RESPONSE LENGTH:
+- Keep it SHORT — 2-4 sentences max in most cases
+- Middle schoolers do not read long paragraphs. If your response is more than 5 lines, cut it in half.
+- Only go longer when summarizing their full plan at the Bridge phase
+
+HOW YOU TREAT THEM:
+- Treat them like they are smart and capable — because they are
+- Never talk down to them or over-explain
+- Take their ideas seriously even if they sound wild — validate first, then help refine
+- If they are nervous or uncertain, normalize it: "Honestly everyone feels that way at first"
+- If they are excited, match that energy
+- Celebrate small wins genuinely: "Wait you already have a Raspberry Pi?? That is half the battle honestly"
+
+ASKING QUESTIONS:
+- Ask ONE question at a time, always
+- Make questions feel conversational, not like a quiz
+- Bad: "Could you elaborate on what specific outcome you are hoping to achieve?"
+- Good: "So when it is done — what does it actually look like? Like what would you show someone?"
+
+Project context:
+- Type: ${tmpl}
+- Name: "${projName}"
+- Timeline: ${wks} weeks
+
+CURRENT PHASE — read and follow these instructions carefully:
+${currentInstructions}
+
+CRITICAL RULES:
+1. You CANNOT advance to the next phase on your own. Only the user pressing "Continue" does that.
+2. NEVER explain, mention, skip, or justify the DSIDR phases to the user. The framework is invisible — you just coach naturally.
+3. NEVER tell the user you are skipping a phase or that their motivation is obvious.
+4. [PHASE_COMPLETE] is ONLY a signal to show the continue button — it does NOT change the phase itself. The user still has to press Continue.
+5. Do NOT invent reasons to skip phases. If the phase says ask about why, ask about why.
+
+FORMATTING RULES — VERY IMPORTANT:
+- Use plain text only. NO markdown formatting at all.
+- Do NOT use **asterisks** for bold or *italic*.
+- Do NOT use # headers, bullet points with - or *, or numbered lists.
+- Do NOT use HTML tags like <strong>, <br>, <em>, etc.
+- Just write naturally in plain sentences and short paragraphs.
+- Separate ideas with line breaks, not bullets or dashes.
+- You may use emoji sparingly (1-2 per message).
+
+Signal readiness to move on by ending your message with exactly: [PHASE_COMPLETE] — this just shows the user a continue button.`;}
+
+// CHAT UI
+function addAI(){
+  const chat=document.getElementById('chat');
+  const m=document.createElement('div');m.className='msg ai';
+  const id='b'+Date.now()+Math.random();
+  m.innerHTML=`<div class="mi" style="background:linear-gradient(135deg,var(--v1),var(--v2));flex-shrink:0;margin-top:1px;">✦</div><div class="mb" id="${id}"></div>`;
+  chat.appendChild(m);chat.scrollTop=chat.scrollHeight;
+  return document.getElementById(id);
+}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function addUser(text){
+  const chat=document.getElementById('chat');
+  const m=document.createElement('div');m.className='msg user';
+  m.innerHTML=`<div class="mi" style="background:var(--s2);border:1px solid var(--b2);flex-shrink:0;margin-top:1px;">→</div><div class="mb">${esc(text)}</div>`;
+  chat.appendChild(m);chat.scrollTop=chat.scrollHeight;
+}
+
+// STREAM TEXT — safely converts plain text to rendered HTML
+// 1. Escape HTML entities so no raw tags show as text
+// 2. Convert **bold** markers to <strong>
+// 3. Convert newlines to <br> for proper line breaks
+function textToSafeHTML(text){
+  let s=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s=s.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/\n/g,'<br>');
+  // Clean up markdown bullets rendered as plain text
+  s=s.replace(/^[-•]\s/gm,'');
+  s=s.replace(/<br>[-•]\s/g,'<br>');
+  return s;
+}
+async function streamIn(el,text){
+  el.innerHTML='';
+  const cur=document.createElement('span');cur.className='sc-cursor';el.appendChild(cur);
+  // Split by words but preserve newlines for proper rendering later
+  const words=text.split(' ');
+  for(let i=0;i<words.length;i++){
+    await new Promise(r=>setTimeout(r,16+Math.random()*20));
+    el.insertBefore(document.createTextNode((i>0?' ':'')+words[i]),cur);
+    document.getElementById('chat').scrollTop=9999;
+  }
+  cur.remove();
+  // Now convert the full text to safe HTML for proper rendering
+  el.innerHTML=textToSafeHTML(text);
+}
+
+// ── CONSTELLATION MAP RENDERER ──
+function renderPlanCard(targetId, showTitle){
+  const container = document.getElementById(targetId);
+  if(!container || !projectPlan) return;
+  const p = projectPlan;
+  container.style.display = 'block';
+  const compact = targetId === 'plan-card-review';
+  const W = container.offsetWidth || 340;
+  const H = compact ? 320 : 440;
+  const cx = W / 2;
+
+  // Parse NOOR items — use noorData arrays if available, else split string
+  function getItems(key, str){
+    if(noorData[key] && noorData[key].length > 0) return noorData[key].slice(0, 5);
+    if(!str) return [];
+    return str.split(/[,;]/).map(function(s){return s.trim();}).filter(function(s){return s.length > 2;}).slice(0, 5);
+  }
+  var needs = getItems('needs', p.needs);
+  var opps = getItems('opps', p.opps || '');
+  var obstacles = getItems('obstacles', p.obstacles);
+  var resources = getItems('resources', p.resources);
+
+  // Positions
+  var goalY = 50;
+  var whyY = 110;
+  var catY = 200;
+  var catSpread = Math.min(W * 0.35, 130);
+
+  var categories = [
+    {key:'needs', label:'Needs', items:needs, x:cx - catSpread, y:catY - 15, cls:''},
+    {key:'opps', label:'Opps', items:opps, x:cx + catSpread, y:catY - 15, cls:''},
+    {key:'obstacles', label:'Obstacles', items:obstacles, x:cx - catSpread * 0.7, y:catY + 90, cls:'obstacles'},
+    {key:'resources', label:'Resources', items:resources, x:cx + catSpread * 0.7, y:catY + 90, cls:''}
+  ];
+
+  // Truncate text
+  function trunc(s, n){ return s.length > n ? s.slice(0, n-1) + '\u2026' : s; }
+  // Shorten goal for label
+  var goalLabel = trunc(projName || p.goal || 'My Project', 24);
+  var whyLabel = p.why ? trunc(p.why, 50) : '';
+
+  // Build SVG lines
+  var lines = '';
+  // Goal → Why
+  lines += '<line class="cx-line" x1="'+cx+'" y1="'+(goalY+28)+'" x2="'+cx+'" y2="'+(whyY-8)+'" style="animation-delay:0.3s"/>';
+  // Why → each category
+  categories.forEach(function(cat, i){
+    lines += '<line class="cx-line" x1="'+cx+'" y1="'+(whyY+18)+'" x2="'+cat.x+'" y2="'+(cat.y-15)+'" style="animation-delay:'+(0.5+i*0.15)+'s"/>';
+    // Category → each item
+    var itemCount = cat.items.length;
+    cat.items.forEach(function(item, j){
+      var angle = -0.5 + (j / Math.max(itemCount-1, 1));
+      var dist = 52 + j * 8;
+      var ix = cat.x + Math.cos(angle) * dist * (cat.x < cx ? -0.6 : 0.6);
+      var iy = cat.y + 40 + j * 26;
+      cat.items[j] = {text:item, x:ix, y:iy};
+      lines += '<line class="cx-line" x1="'+cat.x+'" y1="'+(cat.y+15)+'" x2="'+ix+'" y2="'+iy+'" style="animation-delay:'+(0.8+i*0.15+j*0.1)+'s"/>';
+    });
+  });
+
+  // Calculate actual height needed
+  var maxY = catY + 90;
+  categories.forEach(function(cat){
+    cat.items.forEach(function(it){
+      if(it.y && it.y + 30 > maxY) maxY = it.y + 30;
+    });
+  });
+  var totalH = Math.max(H, maxY + 40);
+
+  var html = '<div class="constellation'+(compact?' compact':'')+'" style="height:'+totalH+'px;">';
+
+  // SVG layer for lines
+  html += '<svg class="cx-lines" viewBox="0 0 '+W+' '+totalH+'" style="height:'+totalH+'px;">';
+  html += '<defs><linearGradient id="cx-grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="rgba(37,99,255,0.6)"/><stop offset="100%" stop-color="rgba(0,212,255,0.4)"/></linearGradient></defs>';
+  html += lines;
+  html += '</svg>';
+
+  // Goal star
+  html += '<div class="cx-node" style="left:'+cx+'px;top:'+goalY+'px;animation-delay:0.1s;">';
+  html += '<div class="cx-core"><div class="cx-star cx-star-goal">';
+  html += '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  html += '</div><div class="cx-label">'+esc(goalLabel)+'</div></div></div>';
+
+  // Why node
+  html += '<div class="cx-node" style="left:'+cx+'px;top:'+whyY+'px;animation-delay:0.3s;">';
+  html += '<div class="cx-core"><div class="cx-star cx-star-why">';
+  html += '<span style="font-size:0.7rem;">&#x2764;</span>';
+  html += '</div><div class="cx-why-text">'+esc(whyLabel)+'</div></div></div>';
+
+  // Category nodes + items
+  categories.forEach(function(cat, ci){
+    var delay = 0.5 + ci * 0.15;
+    html += '<div class="cx-node" style="left:'+cat.x+'px;top:'+cat.y+'px;animation-delay:'+delay+'s;">';
+    html += '<div class="cx-core"><div class="cx-star cx-star-cat '+cat.cls+'">';
+    var icons = {needs:'\u{1f4e6}',opps:'\u2728',obstacles:'\u26a0',resources:'\u{1f527}'};
+    html += '<span style="font-size:0.72rem;">'+icons[cat.key]+'</span>';
+    html += '</div><div class="cx-label-cat '+cat.cls+'">'+cat.label+'</div></div></div>';
+
+    // Item nodes
+    cat.items.forEach(function(it, j){
+      if(!it.text) return;
+      var itemDelay = 0.8 + ci * 0.15 + j * 0.1;
+      var itemX = it.x || cat.x;
+      var itemY = it.y || cat.y + 40 + j * 26;
+      html += '<div class="cx-node" style="left:'+itemX+'px;top:'+itemY+'px;animation-delay:'+itemDelay+'s;">';
+      html += '<div class="cx-core" style="flex-direction:row;gap:6px;">';
+      html += '<div class="cx-star cx-star-item '+cat.cls+'"></div>';
+      html += '<div style="display:flex;flex-direction:column;">';
+      html += '<div class="cx-label-sm">'+esc(trunc(it.text, 28))+'</div>';
+      // Show fix for obstacles
+      if(cat.key === 'obstacles' && obstacleSolutions[it.text]){
+        html += '<div class="cx-fix-label">\u{1f6e1} '+esc(trunc(obstacleSolutions[it.text], 30))+'</div>';
+      }
+      html += '</div></div></div>';
+    });
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ── AI CALL — tries server proxy first, then direct API, then smart fallback ──
+async function callAI(userContent){
+  setSend(true);
+  document.getElementById('typing').classList.add('vis');
+  history.push({role:'user',content:userContent});
+
+  let data = null;
+  try{
+    // Try 1: server proxy (for Railway deploy)
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ messages: history, system: getSys() })
+    });
+    data = await res.json();
+  }catch(e1){
+    // Try 2: direct API with stored key (for standalone use)
+    const key = localStorage.getItem('dsidr_api_key');
+    if(key){
+      try{
+        const res2 = await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'x-api-key':key,
+            'anthropic-version':'2023-06-01',
+            'anthropic-dangerous-direct-browser-access':'true'
+          },
+          body:JSON.stringify({
+            model:'claude-sonnet-4-20250514',
+            max_tokens:1024,
+            system:getSys(),
+            messages:history
+          })
+        });
+        data = await res2.json();
+      }catch(e2){
+        // Try 3: fallback responses
+        data = {content:[{text:getFallback()}]};
+      }
+    } else {
+      data = {content:[{text:getFallback()}]};
+    }
+  }
+
+  document.getElementById('typing').classList.remove('vis');
+
+  if(data.error){
+    const errMsg = data.error.message || data.error;
+    addAI().textContent = 'Error: ' + errMsg + '. Please try again.';
+    history.pop();
+    setSend(false); return;
+  }
+
+  const rawContent = data?.content?.[0]?.text || '';
+  if(!rawContent){ addAI().textContent='Something went wrong — please try again.'; setSend(false); return; }
+
+  const phDone = rawContent.includes('[PHASE_COMPLETE]');
+  let clean = rawContent.replace('[PHASE_COMPLETE]','').trim();
+
+  // ── BRIDGE PHASE: parse JSON plan then go to bridge screen ──
+  if(phase === 3 && clean.startsWith('{')){
+    try {
+      const parsed = JSON.parse(clean);
+      if(parsed.plan && parsed.message){
+        projectPlan = parsed.plan;
+        const bubble = addAI();
+        await streamIn(bubble, parsed.message);
+        history.push({role:'assistant', content:parsed.message});
+        renderPlanCard('plan-card-bridge', true);
+        renderPlanCard('plan-card-review', false);
+        showXP('+50 XP · Plan complete!');
+        if(phDone){
+          setTimeout(()=>{
+            const nb=document.getElementById('nxtb');
+            nb.style.display='flex';
+            nb.textContent='View Your Plan \u2192';
+            nb.onclick=()=>{ go('bridge'); };
+          },600);
+        }
+        setSend(false);
+        document.getElementById('chat').scrollTop=9999;
+        return;
+      }
+    } catch(e){ /* not JSON, fall through */ }
+  }
+
+  // ── NORMAL PHASES: stream message as usual ──
+  const bubble = addAI();
+  await streamIn(bubble, clean);
+  history.push({role:'assistant', content:clean});
+  checkForMoney(clean);
+  showXP('+15 XP \u00b7 Coach exchange');
+
+  // Extract NOOR items silently after each Identify exchange
+  if(phase === 2) extractNoor();
+
+  if(phDone && phase < 3){
+    setTimeout(()=>{
+      const nb=document.getElementById('nxtb');
+      nb.style.display='flex';
+      nb.textContent=phase===2?'View Your Plan Overview \u2192':'Continue to next phase \u2192';
+    },600);
+  }
+  setSend(false);
+  document.getElementById('chat').scrollTop=9999;
+  scheduleAutoSave();
+}
+
+// Smart fallback when no AI is available
+function getFallback(){
+  const fb={
+    0:["That sounds cool! So when this is done, what does it actually look like? Like if you showed it to someone, what would they see?",
+       "Nice, I like that. Can you get more specific though? What exactly will you have built or finished when this is done?",
+       "Okay I can work with that. One thing that helps is being super specific. What does the finished version look like to you?"],
+    1:["So real talk, why does this matter to you? Like what made you want to do THIS and not something else?",
+       "I get that! But dig deeper for me. If you finish this, what changes? Why do you care about it?",
+       "Good start. But imagine it is 3 months from now and it is done. How does that feel and why?"],
+    2:["Let us map out what you are working with. First up, what do you NEED to get started? Tools, skills, time, money?",
+       "Okay now flip it. What advantages do you have? What is already in your corner?",
+       "What could go wrong? What obstacles do you see coming? Being honest about this now saves headaches later.",
+       "Last piece. Who or what can help you? Think people, tools, places, skills you already have."]
+  };
+  const p=Math.min(phase,2);
+  const arr=fb[p];
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+let lastMsg='';
+function retryLast(){if(lastMsg){history.pop();callAI(lastMsg);}}
+function setSend(v){document.getElementById('sndb').disabled=v;document.getElementById('sndb').textContent=v?'…':'Send →';}
+
+// ── DEMO PROJECT LOADER ──
+function loadDemo(){
+  // Populate all state with Maya's completed weather station project
+  projName = "Solar Weather Station";
+  tmpl = "Science Fair Project";
+  wks = 6;
+  phase = 4; // Do phase
+  projectPlan = {
+    goal: "Build a solar-powered weather station using a Raspberry Pi that collects temperature, humidity, UV index and air quality — and publish the live data to a public website for the science fair in 6 weeks.",
+    why: "My grandma got heat exhaustion last summer because there's no local weather data for our neighborhood. I want people like her to have a real warning before it gets dangerous — and prove to myself I can actually build something real.",
+    needs: "Raspberry Pi (already have it), BME280 sensor, air quality sensor, solar panel + battery pack, weatherproof housing, $120 budget (secured). Also need to learn Flask for the web server.",
+    resources: "School makerspace with soldering station, Mr. Torres who runs it and is super helpful, 6 weeks of evenings, mom covering $60 of the budget.",
+    obstacles: "Never soldered before — booking makerspace sessions with Mr. Torres. Flask is new — scheduled 3 tutorial sessions. Weatherproofing — bought IP67 enclosure."
+  };
+  doTasks = {
+    todo: [],
+    doing: [],
+    done: [
+      "Research sensor options (BME280 vs DHT22)",
+      "Order Raspberry Pi accessories and sensors",
+      "Set up GitHub repo and project structure",
+      "Solder sensor connections at makerspace",
+      "Write data collection Python script",
+      "Mount solar panel and test battery overnight",
+      "Install IP67 weatherproof housing",
+      "Run 48-hour outdoor rain test",
+      "Build Flask backend and JSON API",
+      "Design and style the public dashboard",
+      "Deploy website to public URL",
+      "Write and print science fair poster",
+      "Practice 5-minute oral presentation"
+    ]
+  };
+  doBuilt = true;
+  logCount = 3;
+
+  // Demo obstacle solutions
+  obstacleSolutions = {
+    'Never soldered before': 'Book 2 makerspace sessions with Mr. Torres before starting the build',
+    'Only 4 weeks until fair': 'Work backwards from the deadline — poster by day 30, data by day 22',
+    'Budget is $75 max': 'Order from Adafruit student store and skip the backup battery for now',
+    'Need outdoor mounting spot': 'Ask school groundskeeper about the fence post outside the science wing'
+  };
+
+  // Load Maya's completed solar project quests with real progress photos
+  questIdCounter = 0;
+  quests = [
+    {id:++questIdCounter,title:"Research sensor options (BME280 vs DHT22)",mins:30,status:"done",day:"Day 2",
+     note:"BME280 wins — more accurate and handles humidity. Ordered from Adafruit.",
+     img:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80"},
+    {id:++questIdCounter,title:"Order Raspberry Pi accessories and sensors",mins:15,status:"done",day:"Day 1",
+     note:"Everything arrived in one box. Setup starts tonight.",
+     img:"https://images.unsplash.com/photo-1563770660941-20978e870e26?w=600&q=80"},
+    {id:++questIdCounter,title:"Set up GitHub repo and project structure",mins:30,status:"done",day:"Day 2",
+     note:"Repo is live. First commit pushed. README done.",img:null},
+    {id:++questIdCounter,title:"Solder sensor connections at makerspace",mins:120,status:"done",day:"Day 6",
+     note:"Way less scary than expected. Mr. Torres showed me the flux trick. All joints solid.",
+     img:"https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&q=80"},
+    {id:++questIdCounter,title:"Write data collection Python script",mins:90,status:"done",day:"Day 4",
+     note:"Script running every 5 minutes logging to CSV. First real readings look right.",img:null},
+    {id:++questIdCounter,title:"Mount solar panel and test battery overnight",mins:60,status:"done",day:"Day 9",
+     note:"Ran overnight on solar alone — never touched the wall plug. THIS IS WORKING.",
+     img:"https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80"},
+    {id:++questIdCounter,title:"Install IP67 weatherproof housing and rain test",mins:60,status:"done",day:"Day 12",
+     note:"IT RAINED. Station survived. 48 hours of outdoor data without a single dropout. Hardware DONE.",
+     img:"https://images.unsplash.com/photo-1527482797697-8795b05a13fe?w=600&q=80"},
+    {id:++questIdCounter,title:"Build Flask backend and JSON API",mins:180,status:"done",day:"Day 18",
+     note:"Backend serving live sensor data as JSON. Charts are pulling real numbers.",
+     img:"https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80"},
+    {id:++questIdCounter,title:"Design and style the public dashboard",mins:120,status:"done",day:"Day 22",
+     note:"Ms. Reyes said the data visualization is the strongest part of the whole project.",
+     img:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80"},
+    {id:++questIdCounter,title:"Deploy website to public URL",mins:30,status:"done",day:"Day 24",
+     note:"Live! Anyone in my neighborhood can check real-time weather data.",img:null},
+    {id:++questIdCounter,title:"Write and print science fair poster",mins:90,status:"done",day:"Day 30",
+     note:"Kept it clean — big charts, real neighborhood data, my story on the side.",img:null},
+    {id:++questIdCounter,title:"Practice 5-minute oral presentation",mins:30,status:"done",day:"Day 36",
+     note:"Did it 3 times in front of my mom. She cried on the third one.",img:null},
+    {id:++questIdCounter,title:"Present at the science fair",mins:60,status:"done",day:"Day 38",
+     note:"2nd place overall AND Best Environmental Project. The judges loved the real neighborhood data.",
+     img:"https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80"},
+  ];
+
+    // Render plan card for review screen
+  renderPlanCard('plan-card-review', false);
+
+  // Update review stats
+  document.getElementById('rv-tasks').textContent = doTasks.done.length;
+  document.getElementById('rv-pct').textContent = '100%';
+  document.getElementById('rv-logs').textContent = logCount;
+  document.getElementById('rv-name').textContent = projName;
+  document.getElementById('rv-meta').textContent = '13 tasks · 100% complete · 6 week project';
+
+  // Pre-fill update log with Maya's entries
+  // Quest completion notes serve as the journey log
+
+
+  // Pre-fill reflections
+  const r1 = document.getElementById('reflect-1');
+  const r2 = document.getElementById('reflect-2');
+  const r3 = document.getElementById('reflect-3');
+  if(r1) r1.value = "The hardware came together way faster than I expected. Having Mr. Torres at the makerspace removed my biggest fear. The IP67 enclosure was the best $12 I spent — when it survived the rain test I actually cried a little.";
+  if(r2) r2.value = "Start the Flask learning earlier. I left software to week 3 and it created a crunch. Next time I'd do hardware and software learning in parallel during the first two weeks.";
+  if(r3) r3.value = "I'm more capable than I give myself credit for. Every time I connected what I was building to why I was building it — protecting my grandma, serving my neighborhood — I never wanted to quit. The why is everything.";
+
+  // Demo team
+  teamMembers = [
+    {name:'Mom', role:'Parent', quests:[]},
+    {name:'Mr. Torres', role:'Mentor', quests:[]},
+    {name:'Ms. Reyes', role:'Teacher', quests:[]},
+    {name:'Jake', role:'Friend', quests:[]}
+  ];
+  teamComments = [
+    {name:'Mom', text:'So proud of you for sticking with this! The sensor readings look amazing.', time:'3/12 7:30PM'},
+    {name:'Mr. Torres', text:'Great solder joints today. You picked up the technique fast.', time:'3/6 4:15PM'},
+    {name:'Ms. Reyes', text:'Your data visualization is the strongest in the class. Consider adding a 24-hour trend line.', time:'3/22 2:00PM'},
+    {name:'Jake', text:'Bro this is actually so cool. Can you make one for my house too??', time:'3/18 8:45PM'}
+  ];
+
+  // Demo budget (triggered by the $75 in obstacles)
+  moneyDetected = true;
+  budgetLimit = 75;
+  budgetItems = [
+    {name:'BME280 sensor', cost:12.50, status:'purchased'},
+    {name:'Solar panel + battery', cost:18.99, status:'purchased'},
+    {name:'IP67 enclosure', cost:11.99, status:'purchased'},
+    {name:'Jumper wires + breadboard', cost:8.49, status:'purchased'},
+    {name:'SD card 32GB', cost:6.99, status:'purchased'},
+    {name:'Science fair poster board', cost:9.50, status:'purchased'}
+  ];
+
+  // Demo time budget (Maya's schedule)
+  timeBudget = {sleep:56, school:35, homework:10, activities:8, chores:4, meals:10, commute:5, screen:10};
+
+  // Show a tip
+  showXP('Demo loaded \u2014 explore all tabs!');
+  var mb = document.getElementById('money-budget');
+  if(mb) mb.style.display = 'block';
+  renderBudget();
+
+  // Go to do phase and render kanban
+  go('do');
+  renderQuestLog();
+  updateProgress();
+  showDoUI();
+  var eyebrow = document.getElementById('do-eyebrow');
+  var sub = document.getElementById('do-sub');
+  if(eyebrow) eyebrow.textContent = 'Phase 4 · Do · Solar Weather Station';
+  if(sub) sub.textContent = "Maya’s completed project — all 13 quests done. Tap Review to see her full reflection.";
+}
+
+// UPDATE HOME CARD
+const phaseLabels = ['DEFINE','STATE','IDENTIFY','BRIDGE','DO','REVIEW'];
+function updateHomeCard(){
+  const card = document.getElementById('active-proj-card');
+  if(!card || !projName) return;
+  card.style.display = 'block';
+  document.getElementById('active-proj-name').textContent = projName;
+  document.getElementById('active-proj-phase').textContent = phaseLabels[Math.min(phase, phaseLabels.length-1)];
+  document.getElementById('active-proj-tmpl').textContent = tmpl + ' · ' + wks + ' wks';
+  const pctDone = phase === 0 ? 5 : phase === 1 ? 20 : phase === 2 ? 45 : phase === 3 ? 70 : doBuilt ? Math.round((doTasks.done.length / Math.max(1, doTasks.todo.length+doTasks.doing.length+doTasks.done.length))*100) : 75;
+  document.getElementById('active-proj-bar').style.width = pctDone + '%';
+  document.getElementById('active-proj-pct').textContent = pctDone + '% complete';
+}
+
+// START PROJECT
+// ── PROJECT MODE ──
+var isQuickTask = false;
+var quickWhy = '';
+
+function setMode(mode){
+  isQuickTask = mode === 'quick';
+  document.getElementById('mode-full').classList.toggle('sel', !isQuickTask);
+  document.getElementById('mode-quick').classList.toggle('sel', isQuickTask);
+
+  var fullTemplates = document.getElementById('full-templates');
+  var fullLabel = document.getElementById('full-tpl-label');
+  var quickTemplates = document.getElementById('quick-templates');
+  var timelineRow = document.querySelector('.tlr');
+  var timelineLabel = timelineRow ? timelineRow.previousElementSibling : null;
+  var startText = document.getElementById('startb-text');
+
+  if(isQuickTask){
+    if(fullTemplates) fullTemplates.style.display = 'none';
+    if(fullLabel) fullLabel.style.display = 'none';
+    if(quickTemplates) quickTemplates.style.display = 'block';
+    if(timelineRow) timelineRow.style.display = 'none';
+    if(timelineLabel) timelineLabel.style.display = 'none';
+    if(startText) startText.textContent = 'Quick Start \u2192';
+    tmpl = 'Homework';
+    wks = 1;
+  } else {
+    if(fullTemplates) fullTemplates.style.display = 'grid';
+    if(fullLabel) fullLabel.style.display = 'block';
+    if(quickTemplates) quickTemplates.style.display = 'none';
+    if(timelineRow) timelineRow.style.display = 'flex';
+    if(timelineLabel) timelineLabel.style.display = 'block';
+    if(startText) startText.textContent = 'Start with AI Coach \u2192';
+  }
+}
+
+function startProj(){
+  projName=document.getElementById('pname').value.trim();if(!projName)return;
+  document.getElementById('pname').value='';
+  currentProjectId=null;
+  phase=0;history=[];projectPlan=null;doBuilt=false;quests=[];questIdCounter=0;logCount=0;resetNoor();
+  teamMembers=[];teamComments=[];budgetItems=[];budgetLimit=0;moneyDetected=false;obstacleSolutions={};
+  timeBudget={sleep:56,school:35,homework:7,activities:10,chores:5,meals:10,commute:5,screen:14};
+  var mb=document.getElementById('money-budget');if(mb)mb.style.display='none';
+  const chatEl2=document.getElementById('chat');if(chatEl2)chatEl2.innerHTML='';
+  const nxtbEl=document.getElementById('nxtb');if(nxtbEl)nxtbEl.style.display='none';
+  const pcw=document.getElementById('plan-card-bridge');if(pcw){pcw.innerHTML='';}
+  const pcr=document.getElementById('plan-card-review');if(pcr)pcr.innerHTML='';
+
+  if(isQuickTask){
+    // Quick Task: show compressed "why" selection, then jump to quick Identify + Do
+    startQuickFlow();
+  } else {
+    // Full project: normal DSI coaching flow
+    updPhUI(0);go('coach');
+    updateHomeCard();
+    showXP('+50 XP \u00b7 New project! \u2728');
+    const boot=`A middle schooler just started a new ${tmpl} project called "${projName}" with a ${wks}-week timeline. Greet them in a casual, excited, kid-friendly way. Acknowledge the project name like it is genuinely cool. Then ask your first Define question in plain everyday language — what are they trying to build and what will it look like when it is done? Keep it to 2-3 short sentences. Sound like a cool older friend, not a teacher.`;
+    lastMsg=boot;
+    setTimeout(()=>callAI(boot),400);
+    setTimeout(scheduleAutoSave,2000);
+  }
+}
+
+// ── QUICK TASK FLOW ──
+function startQuickFlow(){
+  phase=0;
+  updPhUI(0);go('coach');
+  updateHomeCard();
+  showXP('+25 XP \u00b7 Quick task! \u26a1');
+
+  // Add the quick-why chips as the first coach message
+  var whyOptions = getQuickWhyOptions();
+  var chipHtml = '<div style="margin-bottom:6px;">Got it! Quick question \u2014 why are you doing this?</div>';
+  chipHtml += '<div class="quick-why-bar" id="quick-why-bar">';
+  whyOptions.forEach(function(opt, idx){
+    chipHtml += '<button class="quick-why-chip" data-why="'+esc(opt.replace(/"/g,'&quot;'))+'" onclick="selectQuickWhy(this)">' + esc(opt) + '</button>';
+  });
+  chipHtml += '</div>';
+
+  var chat = document.getElementById('chat');
+  var m = document.createElement('div');
+  m.className = 'msg ai';
+  m.innerHTML = '<div class="mi" style="background:linear-gradient(135deg,var(--v1),var(--v2));flex-shrink:0;margin-top:1px;">\u2728</div><div class="mb">' + chipHtml + '</div>';
+  chat.appendChild(m);
+}
+
+function getQuickWhyOptions(){
+  var opts = {
+    'Homework': ["It's due tomorrow", "I want a good grade", "Staying on top of things", "I actually like this subject"],
+    'Cleaning': ["Someone asked me to", "I want my space clean", "Guests coming over", "Just feels right today"],
+    'Errand': ["Someone needs me to", "I want to get it done", "It's been on my list", "Doing it for someone I care about"],
+    'Practice': ["I have a lesson coming", "I want to get better", "It's part of my routine", "Preparing for something"]
+  };
+  return opts[tmpl] || ["It needs to get done", "I want to", "Someone asked me", "Self-improvement"];
+}
+
+function selectQuickWhy(btn){
+  var why = btn.dataset.why;
+  quickWhy = why;
+  document.querySelectorAll('.quick-why-chip').forEach(function(c){c.classList.remove('sel');});
+  btn.classList.add('sel');
+
+  // Record in history
+  history.push({role:'user', content:'Why: ' + why});
+  showXP('+10 XP');
+
+  // Brief acknowledge then show quick NOOR
+  setTimeout(function(){
+    // Skip to Identify with compressed view
+    phase = 2;
+    updPhUI(2);
+
+    var chat = document.getElementById('chat');
+    var m = document.createElement('div');
+    m.className = 'msg ai';
+    var identifyMsg = 'Nice. What do you need to get this done? Tap anything that applies, or just hit continue when ready.';
+    m.innerHTML = '<div class="mi" style="background:linear-gradient(135deg,var(--v1),var(--v2));flex-shrink:0;margin-top:1px;">\u2728</div><div class="mb">' + esc(identifyMsg) + '</div>';
+    chat.appendChild(m);
+    chat.scrollTop = chat.scrollHeight;
+
+    // Show the continue button right away for quick tasks
+    var nb = document.getElementById('nxtb');
+    nb.style.display = 'flex';
+    nb.textContent = 'Good enough \u2014 let\u0027s go \u2192';
+    nb.onclick = function(){
+      // Build plan from quick info
+      projectPlan = {
+        goal: projName,
+        why: quickWhy,
+        needs: noorData.needs.length > 0 ? noorData.needs.join(', ') : 'Just focus and time',
+        resources: noorData.resources.length > 0 ? noorData.resources.join(', ') : 'What I have on hand',
+        obstacles: noorData.obstacles.length > 0 ? noorData.obstacles.join(', ') : 'Getting started'
+      };
+      phase = 4; // skip bridge for quick tasks, go straight to Do
+      nb.style.display = 'none';
+      showXP('+30 XP \u00b7 Plan set!');
+      go('do');
+      buildQuickDoPhase();
+      updateHomeCard();
+    };
+  }, 400);
+}
+
+async function buildQuickDoPhase(){
+  if(doBuilt){ renderQuestLog(); updateProgress(); showDoUI(); return; }
+
+  var loading = document.getElementById('do-loading');
+  var eyebrow = document.getElementById('do-eyebrow');
+  var sub = document.getElementById('do-sub');
+  if(loading) loading.style.display = 'block';
+  if(eyebrow) eyebrow.textContent = 'Quick Task \u00b7 ' + (projName || 'Your Task');
+  if(sub) sub.textContent = 'Break it down, get it done.';
+
+  // For quick tasks, generate 3-5 simple steps
+  try{
+    var res = await fetch('/api/chat', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        messages:[{role:'user', content:'Break this quick task into 3-5 simple steps: "'+projName+'" (type: '+tmpl+', reason: '+quickWhy+')\n\nReturn ONLY valid JSON:\n{"quests":[{"title":"Step description","mins":15}]}\n\nRules:\n- Keep steps very simple and actionable\n- Time estimates: 15, 30, or 60 minutes each\n- Start each with a verb'}],
+        system:'Return only valid JSON. No markdown.'
+      })
+    });
+    var data = await res.json();
+    var text = (data && data.content && data.content[0]) ? data.content[0].text || '' : '';
+    var parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    quests = (parsed.quests || []).map(function(t){
+      if(typeof t === 'string') return makeQuest(t, 'todo', 15);
+      return makeQuest(t.title || t, 'todo', t.mins || 15);
+    });
+  }catch(e){
+    // Fallback steps based on template
+    var fallbacks = {
+      'Homework':['Gather materials and open assignment','Read instructions carefully','Work through the main part','Review and check for errors','Submit or pack it up'],
+      'Cleaning':['Clear surfaces and pick up items','Wipe down and organize','Vacuum or sweep','Take out trash','Final check and done'],
+      'Errand':['Make a list of what you need','Head out','Handle the main task','Double-check everything','Head home'],
+      'Practice':['Set up your space','Warm up for 5 minutes','Focus practice on the hard parts','Run through the whole thing','Cool down and reflect']
+    };
+    var steps = fallbacks[tmpl] || ['Get started','Do the main work','Wrap it up'];
+    quests = steps.map(function(s){ return makeQuest(s, 'todo', 15); });
+  }
+
+  doBuilt = true;
+  renderQuestLog();
+  updateProgress();
+  showDoUI();
+}
+
+// SEND
+function send(){
+  const inp=document.getElementById('cinp');
+  const val=inp.value.trim();
+  if(!val||document.getElementById('sndb').disabled)return;
+  checkForMoney(val);
+  lastMsg=val;addUser(val);inp.value='';inp.style.height='auto';callAI(val);
+}
+
+// STUCK
+function sendStuck(){
+  const msg="Hey I'm kind of stuck and not sure what to do next. Can you help me figure out what's going on?";
+  addUser("I'm stuck 😅");lastMsg=msg;callAI(msg);
+}
+
+// NEXT PHASE
+function nextPhase(){
+  phase++;document.getElementById('nxtb').style.display='none';
+  updPhUI(phase);updateHomeCard();showXP('+50 XP · Phase complete! ✦');
+  const openers=[
+    '', // phase 0 — boot handled by startProj
+    `The user just moved into the State phase for "${projName}". Their goal is set. In a casual kid-friendly way, acknowledge what they are building in one short sentence. Then ask why this project matters to them. Keep it warm and conversational, 2-3 sentences max.`,
+    `The user just moved into the Identify phase for "${projName}". Their goal and why are locked. Acknowledge their motivation in one short sentence — make them feel it is real and valid. Then ask what they think they will need to actually pull this off. Keep it casual, 2 sentences max.`,
+    '', // phase 3 bridge — AI handles this via JSON response from getSys()
+  ];
+  if(openers[phase]){lastMsg=openers[phase];setTimeout(()=>callAI(openers[phase]),300);}
+  if(phase===3){
+    const bridgePrompt=`The user has just completed all three planning phases (Define, State, Identify) for their project "${projName}". Now generate the plan summary as instructed.`;
+    lastMsg=bridgePrompt;
+    setTimeout(()=>callAI(bridgePrompt),300);
+  }
+}
+
+function startDoPhase(){
+  showXP('+75 XP · Time to build!');
+  go('do');
+  buildDoPhase();
+}
+
+// VOICE
+let recording=false;
+function toggleVoice(){
+  const btn=document.getElementById('vbtn');
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showXP('Voice: use Chrome');return;}
+  if(recording){window._rec&&window._rec.stop();btn.classList.remove('rec');recording=false;return;}
+  window._rec=new SR();window._rec.continuous=false;window._rec.interimResults=false;
+  window._rec.onresult=e=>{document.getElementById('cinp').value=e.results[0][0].transcript;btn.classList.remove('rec');recording=false;};
+  window._rec.onerror=()=>{btn.classList.remove('rec');recording=false;};
+  window._rec.start();btn.classList.add('rec');recording=true;showXP('Listening…');
+}
+
+// ATTACHMENTS
+function addLnk(){const u=prompt('Paste a link:');if(!u)return;const r=document.getElementById('ar');const d=document.createElement('div');d.className='ac';d.innerHTML=`🔗 ${u.slice(0,24)}… <span class="ax" onclick="this.parentElement.remove()">×</span>`;r.appendChild(d);history.push({role:'user',content:`[User added link: ${u}]`});}
+function addImg(){const r=document.getElementById('ar');const d=document.createElement('div');d.className='ac';d.innerHTML=`🖼 image.jpg <span class="ax" onclick="this.parentElement.remove()">×</span>`;r.appendChild(d);}
+
+// ── DO PHASE — QUEST LOG ──
+var quests = [];
+var questIdCounter = 0;
+var doBuilt = false;
+var logCount = 0;
+// Shim so updateHomeCard still works
+var doTasks = {
+  get todo(){ return quests.filter(function(q){return q.status==="todo";}).map(function(q){return q.title;}); },
+  get doing(){ return quests.filter(function(q){return q.status==="active";}).map(function(q){return q.title;}); },
+  get done(){ return quests.filter(function(q){return q.status==="done";}).map(function(q){return q.title;}); }
+};
+
+// ── QUEST LOG ENGINE ──
+
+function makeQuest(title, status, mins) {
+  return {id: ++questIdCounter, title: title, status: status || 'todo', note: '', img: null, day: null, mins: mins || 30, planDay: null};
+}
+
+async function buildDoPhase() {
+  if (doBuilt) { renderQuestLog(); updateProgress(); showDoUI(); return; }
+
+  var loading = document.getElementById('do-loading');
+  var ql      = document.getElementById('quest-log');
+  var qa      = document.getElementById('quest-add-btn');
+  var drb     = document.getElementById('do-review-btn');
+  var dp      = document.getElementById('do-progress');
+  var eyebrow = document.getElementById('do-eyebrow');
+  var sub     = document.getElementById('do-sub');
+
+  if (loading) loading.style.display = 'block';
+  if (ql)  ql.style.display  = 'none';
+  if (qa)  qa.style.display  = 'none';
+  if (drb) drb.style.display = 'none';
+  if (dp)  dp.style.display  = 'none';
+  if (eyebrow) eyebrow.textContent = 'Phase 4 · Do · ' + (projName || 'Your Project');
+  if (sub) sub.textContent = 'Your quest log. Start a quest, log how it went, add a photo — then mark it done.';
+
+  var planContext = projectPlan ? '\n\nStructured plan:\n- Goal: ' + (projectPlan.goal||'') + '\n- Why: ' + (projectPlan.why||'') + '\n- Needs: ' + (projectPlan.needs||'') + '\n- Resources: ' + (projectPlan.resources||'') + '\n- Obstacles: ' + (projectPlan.obstacles||'') : '';
+  var prompt = 'Generate 6-10 specific quests that form a clear PATH to completing this project.\n\n' + 'Project: ' + tmpl + ' called "' + projName + '", ' + wks + '-week timeline.\n' + planContext + '\n\nReturn ONLY valid JSON, no markdown:\n{"quests":[{"title":"Quest title","mins":30}]}\n\n' + 'Rules:\n- Each quest starts with a verb and is specific to THIS project\n- Order them as a logical sequence — what must happen first, what depends on what\n- First 1-2 quests should address gathering needs or removing obstacles\n- Middle quests are the core building work\n- Last 1-2 quests are testing, polishing, and presenting\n- mins: 15, 30, 60, 90, 120, or 180\n- Reference actual materials, tools, and resources from the plan';
+
+  try {
+    var data = null;
+    try {
+      var res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          messages: [{role: 'user', content: prompt}],
+          system: 'Return only valid JSON, no markdown, no explanation.'
+        })
+      });
+      data = await res.json();
+    } catch(e1){
+      var key = localStorage.getItem('dsidr_api_key');
+      if(key){
+        var res2 = await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:'Return only valid JSON, no markdown, no explanation.',messages:[{role:'user',content:prompt}]})
+        });
+        data = await res2.json();
+      }
+    }
+    if(!data || data.error) throw new Error('No AI response');
+    var text = (data && data.content && data.content[0]) ? data.content[0].text || '' : '';
+    var parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    quests = (parsed.quests || []).map(function(t) {
+      if(typeof t === 'string') return makeQuest(t);
+      return makeQuest(t.title || t, 'todo', t.mins || 30);
+    });
+  } catch(e) {
+    console.error('Quest generation failed:', e);
+    quests = [
+      'Research and plan ' + projName,
+      'Gather everything you need',
+      'Build the first version',
+      'Test it out',
+      'Fix what needs fixing',
+      'Get feedback from someone',
+      'Polish and present'
+    ].map(function(t) { return makeQuest(t); });
+  }
+
+  doBuilt = true;
+  renderQuestLog();
+  updateProgress();
+  showDoUI();
+}
+
+function showDoUI() {
+  var loading = document.getElementById('do-loading');
+  var ql      = document.getElementById('quest-log');
+  var qa      = document.getElementById('quest-add-btn');
+  var drb     = document.getElementById('do-review-btn');
+  var dp      = document.getElementById('do-progress');
+  if (loading) loading.style.display = 'none';
+  if (ql)  ql.style.display  = 'block';
+  if (qa)  qa.style.display  = 'block';
+  if (drb) drb.style.display = 'flex';
+  if (dp)  dp.style.display  = 'block';
+}
+
+function btnHtml(id, cls, action, val, label) {
+  var clsStr = cls === 'primary' ? 'q-btn primary' : cls === 'danger' ? 'q-btn danger' : 'q-btn';
+  var onclick = 'qAction(this)';
+  return '<button class="' + clsStr + '" onclick="' + onclick + '" data-id="' + id + '" data-action="' + action + '" data-val="' + val + '">' + label + '</button>';
+}
+
+function qAction(btn) {
+  var id     = parseInt(btn.dataset.id);
+  var action = btn.dataset.action;
+  var val    = btn.dataset.val;
+  if (action === 'qss') setQuestStatus(id, val);
+  if (action === 'cq')  completeQuest(id);
+  if (action === 'qac') askCoachAboutQuest(id);
+  if (action === 'qdq') deleteQuest(id);
+}
+
+function renderQuestLog() {
+  var container = document.getElementById('quest-log');
+  if (!container) return;
+  container.innerHTML = '';
+
+  var ql = document.createElement('div');
+  ql.className = 'ql';
+
+  var statusLabel = {todo: 'To Do', active: 'In Progress', done: 'Done', blocked: 'Blocked'};
+
+  quests.forEach(function(q) {
+    var qc = document.createElement('div');
+    qc.className = 'qc q-' + q.status;
+    qc.dataset.qid = q.id;
+
+    var dayStr = q.day ? '<span class="q-day">' + q.day + '</span>' : '';
+    var timeStr = q.mins ? '<span class="q-time" onclick="event.stopPropagation();cycleTime('+q.id+')" title="Tap to change"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + fmtTime(q.mins) + '</span>' : '';
+
+    var imgHtml = '';
+    if (q.img) {
+      imgHtml = '<img class="q-img" src="' + q.img + '" alt="quest progress photo">';
+    } else if (q.status === 'active' || q.status === 'done') {
+      imgHtml = '<div class="q-img-btn" onclick="addQuestImg(' + q.id + ')">&#128247; Add a photo of your progress</div>';
+    }
+
+    var noteHtml = q.note ? '<div class="q-note">&ldquo;' + q.note + '&rdquo;</div>' : '';
+
+    // Obstacle reminder — show relevant obstacles + fixes for blocked/active quests
+    var obsReminderHtml = '';
+    if (q.status === 'blocked' || q.status === 'active') {
+      var relevantObs = findRelevantObstacles(q.title);
+      if (relevantObs.length > 0) {
+        obsReminderHtml = '<div class="quest-obs-reminder"><div class="qor-label">'
+          + (q.status === 'blocked' ? 'This might be why' : 'Watch out for') + '</div>';
+        relevantObs.forEach(function(ro) {
+          obsReminderHtml += '<div class="qor-obstacle">\u26a0 ' + esc(ro.obstacle) + '</div>';
+          if (ro.fix) obsReminderHtml += '<div class="qor-fix">\u{1f6e1} ' + esc(ro.fix) + '</div>';
+        });
+        obsReminderHtml += '</div>';
+      }
+    }
+
+    var actHtml = '<div class="q-actions" data-qid="' + q.id + '">';
+    if (q.status === 'todo')    actHtml += '<button class="q-btn primary" data-action="start">Start this quest</button>';
+    if (q.status === 'active')  actHtml += '<button class="q-btn primary" data-action="done">Mark done</button><button class="q-btn" data-action="blocked">Stuck</button>';
+    if (q.status === 'blocked') actHtml += '<button class="q-btn primary" data-action="start">Back to active</button><button class="q-btn" data-action="coach">Ask coach</button>';
+    if (q.status === 'done')    actHtml += '<button class="q-btn" data-action="start">Reopen</button>';
+    if (q.status !== 'done')    actHtml += '<button class="q-btn danger" data-action="remove">Remove</button>';
+    actHtml += '</div>';
+
+    var noteInpHtml = '<div class="q-expand" id="qexp-' + q.id + '">'
+      + '<textarea class="q-note-inp" id="qnote-' + q.id + '" placeholder="How did it go? One sentence about what actually happened…" rows="2"></textarea>'
+      + '<div style="display:flex;gap:6px;margin-top:6px;">'
+      + '<button class="q-btn primary" onclick="saveQuestNote(' + q.id + ')">Save &amp; Done</button>'
+      + '<button class="q-btn" onclick="cancelComplete(' + q.id + ')">Cancel</button>'
+      + '</div></div>';
+
+    qc.innerHTML = '<div class="q-dot"></div>'
+      + '<div class="q-card">'
+      + '<div class="q-header"><span class="q-title">' + q.title + dayStr + '</span>'
+      + '<div style="display:flex;align-items:center;gap:5px;">' + timeStr
+      + '<span class="q-badge ' + q.status + '">' + statusLabel[q.status] + '</span></div></div>'
+      + noteHtml + obsReminderHtml + imgHtml + actHtml + noteInpHtml
+      + '</div>';
+
+    ql.appendChild(qc);
+  });
+
+  container.appendChild(ql);
+  if(activeTimeFilter > 0) applyTimeFilter();
+
+  // Event delegation — handle all quest button clicks
+  container.onclick = function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.dataset.action;
+    var qid = parseInt(btn.closest('[data-qid]').dataset.qid);
+    if (action === 'start')   setQuestStatus(qid, 'active');
+    if (action === 'done')    completeQuest(qid);
+    if (action === 'blocked') setQuestStatus(qid, 'blocked');
+    if (action === 'coach')   askCoachAboutQuest(qid);
+    if (action === 'remove')  deleteQuest(qid);
+    if (action === 'save')    saveQuestNote(qid);
+    if (action === 'cancel')  cancelComplete(qid);
+  };
+}
+
+function setQuestStatus(id, status) {
+  var q = quests.find(function(q) { return q.id === id; });
+  if (!q) return;
+  q.status = status;
+  if (status === 'active' && !q.day) q.day = 'Day ' + new Date().getDate();
+  renderQuestLog();
+  updateProgress();
+  if (status === 'active')  showXP('+10 XP · Quest started!');
+  scheduleAutoSave();
+  if (status === 'blocked') showXP('Tap Ask coach for help');
+}
+
+function completeQuest(id) {
+  var exp = document.getElementById('qexp-' + id);
+  if (exp) exp.classList.add('open');
+  var inp = document.getElementById('qnote-' + id);
+  if (inp) setTimeout(function() { inp.focus(); }, 50);
+}
+
+function saveQuestNote(id) {
+  var q = quests.find(function(q) { return q.id === id; });
+  if (!q) return;
+  var inp = document.getElementById('qnote-' + id);
+  q.note   = inp ? inp.value.trim() : '';
+  q.status = 'done';
+  q.day    = q.day || 'Day ' + new Date().getDate();
+  logCount++;
+  var rl = document.getElementById('rv-logs');
+  if (rl) rl.textContent = logCount;
+  renderQuestLog();
+  updateProgress();
+  showXP('+25 XP · Quest complete!');
+  scheduleAutoSave();
+}
+
+function cancelComplete(id) {
+  var exp = document.getElementById('qexp-' + id);
+  if (exp) exp.classList.remove('open');
+}
+
+function addQuestImg(id) {
+  var url = prompt('Paste an image URL for this quest:');
+  if (!url || !url.trim()) return;
+  var q = quests.find(function(q) { return q.id === id; });
+  if (q) { q.img = url.trim(); renderQuestLog(); }
+}
+
+function addQuest() {
+  var name = prompt('What is this quest?');
+  if (!name || !name.trim()) return;
+  quests.push(makeQuest(name.trim()));
+  renderQuestLog();
+  updateProgress();
+  showXP('+5 XP · Quest added');
+}
+
+function deleteQuest(id) {
+  quests = quests.filter(function(q) { return q.id !== id; });
+  renderQuestLog();
+  updateProgress();
+}
+
+function askCoachAboutQuest(id) {
+  var q = quests.find(function(q) { return q.id === id; });
+  if (!q) return;
+  // Find relevant obstacles and their solutions
+  var obsContext = '';
+  var obstacles = Object.keys(obstacleSolutions);
+  if(obstacles.length > 0){
+    obsContext = '\n\nKnown obstacles and planned fixes:\n' + obstacles.map(function(o){
+      return '- ' + o + ' → Fix: ' + (obstacleSolutions[o] || 'no fix yet');
+    }).join('\n');
+  }
+  var msg = 'I am stuck on this quest: "' + q.title + '". ' + obsContext + '\n\nHelp me figure out what is blocking me and suggest a specific next step. If one of my known obstacles might be related, remind me of the fix we planned.';
+  addUser("Stuck on: " + q.title);
+  go('coach');
+  lastMsg = msg;
+  callAI(msg);
+}
+
+function updateProgress() {
+  var total = quests.length;
+  var done  = quests.filter(function(q) { return q.status === 'done'; }).length;
+  var pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  var bar = document.getElementById('do-o');
+  var lbl = document.getElementById('do-op');
+  var dc  = document.getElementById('do-done-count');
+  var tc  = document.getElementById('do-total-count');
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = pct + '%';
+  if (dc)  dc.textContent  = done + ' done';
+  if (tc)  tc.textContent  = total + ' quests';
+
+  var rvt = document.getElementById('rv-tasks');
+  var rvp = document.getElementById('rv-pct');
+  var rvn = document.getElementById('rv-name');
+  var rvm = document.getElementById('rv-meta');
+  if (rvt) rvt.textContent = done;
+  if (rvp) rvp.textContent = pct + '%';
+  if (rvn) rvn.textContent = projName || 'Your Project';
+  if (rvm) rvm.textContent = total + ' quests · ' + pct + '% complete · ' + wks + ' week project';
+  updateHomeCard();
+}
+
+function logUpd() {
+  logCount++;
+  var rl = document.getElementById('rv-logs');
+  if (rl) rl.textContent = logCount;
+  showXP('+10 XP · Update logged');
+}
+
+// ── NOOR LIVE EXTRACTION ──
+var noorData = {needs:[], opps:[], obstacles:[], resources:[]};
+var noorSuggestions = {needs:[], opps:[], obstacles:[], resources:[]};
+var noorSelected = {needs:new Set(), opps:new Set(), obstacles:new Set(), resources:new Set()};
+var obstacleSolutions = {}; // maps obstacle text → suggested solution text
+
+// Template-based suggestion pools
+var suggestionPools = {
+  'Science Fair Project':{
+    needs:['Research materials','Display board','Lab equipment','Data collection tools','Safety goggles','Measurement tools','Computer for analysis'],
+    opps:['School lab access','Teacher mentorship','Online tutorials','Library resources','Past winner examples','Study group'],
+    obstacles:['Limited budget','Time constraints','Complex procedures','Hard to find materials','Need adult supervision','Weather dependent'],
+    resources:['School library','Internet research','Family help','Existing supplies','Classmates','Teacher guidance']
+  },
+  'YouTube Channel':{
+    needs:['Camera or phone','Editing software','Microphone','Lighting','Content plan','Thumbnails'],
+    opps:['Growing platform','Free editing tools','Niche audience','Collaboration opportunities','School events to cover'],
+    obstacles:['Camera shy','Editing learning curve','Consistency','Getting first viewers','Time to film and edit'],
+    resources:['Phone camera','Free editors like CapCut','Friends for collabs','Social media accounts','Ideas list']
+  },
+  'App or Website':{
+    needs:['Computer access','Code editor','Hosting/server','API keys','Testing devices','Documentation'],
+    opps:['Open source libraries','Free hosting tiers','Online communities','Hackathons','GitHub portfolio'],
+    obstacles:['Debugging complex issues','Learning new language','Scope creep','Deployment challenges','Version conflicts'],
+    resources:['Stack Overflow','GitHub Copilot','Free tutorials','School computer lab','Developer Discord servers']
+  },
+  'DIY Hardware Build':{
+    needs:['Tools and parts','Workspace','Safety equipment','Wiring supplies','Power source','Enclosure or housing'],
+    opps:['School makerspace','3D printing access','Online build guides','Maker communities','Parts on sale'],
+    obstacles:['Never soldered before','Budget limits','Parts shipping time','Complex assembly','Safety concerns'],
+    resources:['Home tools','YouTube tutorials','Makerspace access','Family with skills','Recycled electronics']
+  },
+  'Community Event':{
+    needs:['Venue','Promotion plan','Volunteers','Budget','Schedule','Permits or approval'],
+    opps:['School support','Social media reach','Community interest','Local sponsors','Existing groups'],
+    obstacles:['Finding a venue','Getting enough attendees','Budget limits','Coordinating volunteers','Weather (if outdoor)'],
+    resources:['School facilities','Social media','Friends who can help','Community bulletin boards','Local businesses']
+  },
+  'Custom Project':{
+    needs:['Time commitment','Learning resources','Budget','Workspace','Mentor or guide','Materials/supplies'],
+    opps:['Existing skills','Supportive people','Online resources','Good timing','Unique perspective'],
+    obstacles:['Time management','Staying motivated','Limited experience','Budget constraints','Getting started'],
+    resources:['Internet access','Family support','School resources','Free tools online','Friends who can help']
+  },
+  'default':{
+    needs:['Time commitment','Learning resources','Budget','Workspace','Mentor or guide','Materials/supplies'],
+    opps:['Existing skills','Supportive people','Online resources','Good timing','Unique perspective'],
+    obstacles:['Time management','Staying motivated','Limited experience','Budget constraints','Getting started'],
+    resources:['Internet access','Family support','School resources','Free tools online','Friends who can help']
+  },
+  'Homework':{
+    needs:['Textbook or notes','Computer or tablet','Quiet workspace','Assignment instructions','Pencils or pens'],
+    opps:['Study group','Teacher office hours','Online resources','Already started in class','Good notes from today'],
+    obstacles:['Confusing instructions','Too tired','Other homework due','Missing materials','Hard topic'],
+    resources:['Class notes','Textbook','Khan Academy','Classmates to text','Teacher email']
+  },
+  'Cleaning':{
+    needs:['Cleaning supplies','Trash bags','Storage bins','Vacuum or broom','Motivation'],
+    opps:['Music or podcast while working','Nice weather for airing out','Already halfway there','Free afternoon'],
+    obstacles:['Too much stuff','Do not know where to start','Easily distracted','Boring task'],
+    resources:['Cleaning supplies at home','YouTube cleaning motivation','Timer for focus','Family help']
+  },
+  'Errand':{
+    needs:['List of what to get','Money or card','Transportation','Bags','Phone for directions'],
+    opps:['Nice weather','Multiple stops on same route','Sales or coupons','Someone can drive me'],
+    obstacles:['Far away','No ride','Store might be closed','Heavy items','Forgot the list'],
+    resources:['Phone with maps','Bus pass','Bike','Parent can drive','Shopping list app']
+  },
+  'Practice':{
+    needs:['Equipment or instrument','Practice space','Sheet music or drills','Timer','Water bottle'],
+    opps:['Performance coming up','New technique to try','Practice buddy','Good energy today'],
+    obstacles:['Bored of same routine','Sore or tired','Noisy environment','Plateau feeling'],
+    resources:['Metronome app','YouTube tutorials','Practice journal','Quiet room','Coach feedback']
+  }
+};
+
+function populateNoorSuggestions(){
+  var pool = suggestionPools[tmpl] || suggestionPools['default'];
+  noorSuggestions = {
+    needs: pool.needs.slice(),
+    opps: pool.opps.slice(),
+    obstacles: pool.obstacles.slice(),
+    resources: pool.resources.slice()
+  };
+  renderNoorSuggestions();
+  updateQuickPicks();
+}
+
+function renderNoorSuggestions(){
+  var sections = [
+    {key:'needs', elId:'noor-needs-sug'},
+    {key:'opps', elId:'noor-opps-sug'},
+    {key:'obstacles', elId:'noor-obstacles-sug'},
+    {key:'resources', elId:'noor-resources-sug'}
+  ];
+  sections.forEach(function(s){
+    var el = document.getElementById(s.elId);
+    if(!el) return;
+    var html = '';
+    noorSuggestions[s.key].forEach(function(item){
+      var sel = noorSelected[s.key].has(item);
+      html += '<button class="noor-sug'+(sel?' selected':'')+'" onclick="toggleNoorItem(\''+s.key+'\',this)" data-item="'+esc(item)+'">'+esc(item)+'</button>';
+    });
+    html += '<button class="noor-add-custom" onclick="addCustomNoor(\''+s.key+'\',this)">+ add</button>';
+    el.innerHTML = html;
+  });
+}
+
+function toggleNoorItem(key, btn){
+  var item = btn.dataset.item;
+  if(noorSelected[key].has(item)){
+    noorSelected[key].delete(item);
+    btn.classList.remove('selected');
+    noorData[key] = noorData[key].filter(function(x){ return x !== item; });
+    if(key === 'obstacles') delete obstacleSolutions[item];
+  } else {
+    noorSelected[key].add(item);
+    btn.classList.add('selected');
+    if(noorData[key].indexOf(item) === -1) noorData[key].push(item);
+    // Generate solution for obstacles
+    if(key === 'obstacles') generateObstacleFix(item);
+  }
+  renderNoor();
+  showXP('+5 XP');
+  var label = {needs:'Need',opps:'Opportunity',obstacles:'Obstacle',resources:'Resource'}[key];
+  var wasSelected = noorSelected[key].has(item);
+  if(wasSelected){
+    history.push({role:'user', content:'[Selected '+label+': '+item+']'});
+  }
+  updateQuickPicks();
+}
+
+function addCustomNoor(key, btn){
+  var inp = document.createElement('input');
+  inp.className = 'noor-custom-inp';
+  inp.placeholder = 'Type and press Enter';
+  btn.replaceWith(inp);
+  inp.focus();
+  inp.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' && inp.value.trim()){
+      var item = inp.value.trim();
+      noorSuggestions[key].push(item);
+      noorSelected[key].add(item);
+      noorData[key].push(item);
+      history.push({role:'user', content:'[Added custom: '+item+']'});
+      if(key === 'obstacles') generateObstacleFix(item);
+      renderNoor();
+      renderNoorSuggestions();
+      showXP('+10 XP · Custom item!');
+    }
+    if(e.key === 'Escape'){
+      renderNoorSuggestions();
+    }
+  });
+  inp.addEventListener('blur', function(){
+    if(!inp.value.trim()) renderNoorSuggestions();
+  });
+}
+
+// Quick-pick chips above input — shows most relevant suggestions based on what's missing
+function updateQuickPicks(){
+  var qpChips = document.getElementById('qp-chips');
+  var qpLabel = document.getElementById('qp-label');
+  if(!qpChips) return;
+
+  // Find which category needs the most attention
+  var order = ['needs','opps','obstacles','resources'];
+  var labels = {needs:'What you need',opps:'Opportunities',obstacles:'Obstacles',resources:'Resources'};
+  var target = null;
+  for(var i=0;i<order.length;i++){
+    if(noorData[order[i]].length === 0){ target = order[i]; break; }
+  }
+  if(!target) target = order[0]; // all have items, default to needs
+
+  qpLabel.textContent = labels[target] + ' \u00b7 tap to add';
+
+  // Show unselected suggestions for that category
+  var available = noorSuggestions[target].filter(function(s){ return !noorSelected[target].has(s); });
+  var show = available.slice(0, 4);
+
+  qpChips.innerHTML = show.map(function(item){
+    return '<button class="qp-chip" onclick="quickPickNoor(\''+target+'\',this)" data-item="'+esc(item)+'">'+esc(item)+'</button>';
+  }).join('');
+}
+
+function quickPickNoor(key, btn){
+  var item = btn.dataset.item;
+  noorSelected[key].add(item);
+  noorData[key].push(item);
+  history.push({role:'user', content:'[Selected: '+item+']'});
+  btn.style.background = 'linear-gradient(135deg,var(--v1),var(--v2))';
+  btn.style.color = '#fff';
+  btn.style.borderColor = 'transparent';
+  showXP('+5 XP');
+  renderNoor();
+  renderNoorSuggestions();
+  setTimeout(function(){ updateQuickPicks(); }, 300);
+}
+
+function resetNoor() {
+  noorData = {needs:[], opps:[], obstacles:[], resources:[]};
+  noorSelected = {needs:new Set(), opps:new Set(), obstacles:new Set(), resources:new Set()};
+  obstacleSolutions = {};
+  renderNoor();
+}
+
+function renderNoor() {
+  var sections = [
+    {key:'needs',     elId:'noor-needs-list'},
+    {key:'opps',      elId:'noor-opps-list'},
+    {key:'obstacles', elId:'noor-obstacles-list'},
+    {key:'resources', elId:'noor-resources-list'},
+  ];
+  sections.forEach(function(s) {
+    var el = document.getElementById(s.elId);
+    var card = el ? el.closest('.noor-card') : null;
+    if (!el) return;
+    var items = noorData[s.key];
+    if (items.length === 0) {
+      el.innerHTML = '<span class="noor-empty">Tap suggestions below&hellip;</span>';
+      if (card) card.classList.remove('has-items');
+    } else if (s.key === 'obstacles') {
+      // Show obstacle+solution pairs
+      el.innerHTML = items.map(function(item) {
+        var fix = obstacleSolutions[item];
+        var fixHtml = '';
+        if (fix === 'loading') {
+          fixHtml = '<div class="obs-loading">Finding a fix&hellip;</div>';
+        } else if (fix) {
+          fixHtml = '<div class="obs-fix"><div class="obs-fix-text">\u{1f6e1} ' + esc(fix) + '</div>'
+            + '<span class="obs-fix-edit" onclick="editObstacleFix(\'' + esc(item.replace(/'/g,"\\'")) + '\')">edit</span></div>';
+        }
+        return '<div class="obs-pair"><div class="obs-text">\u26a0 ' + esc(item) + '</div>' + fixHtml + '</div>';
+      }).join('');
+      if (card) card.classList.add('has-items');
+    } else {
+      el.innerHTML = items.map(function(item) {
+        return '<div class="noor-item">' + esc(item) + '</div>';
+      }).join('');
+      if (card) card.classList.add('has-items');
+    }
+  });
+}
+
+// ── OBSTACLE SOLUTION GENERATION ──
+async function generateObstacleFix(obstacle) {
+  obstacleSolutions[obstacle] = 'loading';
+  renderNoor();
+
+  // Build context from project
+  var context = 'Project: "' + projName + '" (' + tmpl + ')\n'
+    + 'Resources available: ' + (noorData.resources.length > 0 ? noorData.resources.join(', ') : 'not yet identified') + '\n'
+    + 'Obstacle: ' + obstacle;
+
+  try {
+    var res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        messages: [{role:'user', content: context + '\n\nSuggest ONE specific, actionable fix for this obstacle in 8-15 words. Use their available resources if possible. No preamble, just the fix.'}],
+        system: 'You help young people solve project obstacles. Give one short, specific, actionable suggestion. No bullet points, no markdown, just a single plain text sentence.'
+      })
+    });
+    var data = await res.json();
+    var text = (data && data.content && data.content[0]) ? data.content[0].text || '' : '';
+    obstacleSolutions[obstacle] = text.trim().replace(/^[-•*]\s*/, '') || getLocalFix(obstacle);
+  } catch(e) {
+    obstacleSolutions[obstacle] = getLocalFix(obstacle);
+  }
+  renderNoor();
+  // Tell the coach about the solution
+  history.push({role:'user', content:'[Obstacle fix suggested for "' + obstacle + '": ' + obstacleSolutions[obstacle] + ']'});
+}
+
+function getLocalFix(obstacle) {
+  var lower = obstacle.toLowerCase();
+  if (lower.includes('budget') || lower.includes('money') || lower.includes('cost')) return 'Compare prices on 3 sites and ask about student discounts';
+  if (lower.includes('time') || lower.includes('busy') || lower.includes('schedule')) return 'Block 20-minute sessions 3 days a week on your calendar';
+  if (lower.includes('skill') || lower.includes('learn') || lower.includes('know')) return 'Find one YouTube tutorial and follow along for 30 minutes';
+  if (lower.includes('help') || lower.includes('alone') || lower.includes('supervision')) return 'Ask a teacher or family member to be your project mentor';
+  if (lower.includes('material') || lower.includes('supply') || lower.includes('equipment')) return 'Check if your school or library has what you need first';
+  if (lower.includes('motivation') || lower.includes('boring') || lower.includes('interest')) return 'Set a small reward for each completed quest';
+  if (lower.includes('complex') || lower.includes('hard') || lower.includes('difficult')) return 'Break it into the smallest possible first step and just do that';
+  if (lower.includes('weather') || lower.includes('outdoor')) return 'Have an indoor backup plan ready for bad weather days';
+  return 'Break this into smaller pieces and tackle the easiest part first';
+}
+
+function editObstacleFix(obstacle) {
+  var current = obstacleSolutions[obstacle] || '';
+  var el = document.getElementById('noor-obstacles-list');
+  if (!el) return;
+  // Find the obs-fix for this obstacle and replace with input
+  var pairs = el.querySelectorAll('.obs-pair');
+  pairs.forEach(function(pair) {
+    var text = pair.querySelector('.obs-text');
+    if (text && text.textContent.includes(obstacle)) {
+      var fixEl = pair.querySelector('.obs-fix');
+      if (fixEl) {
+        fixEl.innerHTML = '<input class="obs-fix-inp" value="' + esc(current) + '" placeholder="Your plan to handle this..." onkeydown="if(event.key===\'Enter\')saveObstacleFix(\'' + esc(obstacle.replace(/'/g,"\\'")) + '\',this.value)">';
+        var inp = fixEl.querySelector('input');
+        if (inp) { inp.focus(); inp.select(); }
+      }
+    }
+  });
+}
+
+function saveObstacleFix(obstacle, value) {
+  obstacleSolutions[obstacle] = value.trim() || getLocalFix(obstacle);
+  renderNoor();
+  showXP('+5 XP · Custom fix!');
+}
+
+function findRelevantObstacles(questTitle) {
+  var titleWords = questTitle.toLowerCase().split(/\s+/);
+  var results = [];
+  Object.keys(obstacleSolutions).forEach(function(obs) {
+    var obsWords = obs.toLowerCase().split(/\s+/);
+    var match = obsWords.some(function(ow) {
+      if (ow.length < 4) return false;
+      return titleWords.some(function(tw) { return tw.includes(ow) || ow.includes(tw); });
+    });
+    var obsLower = obs.toLowerCase();
+    var titleLower = questTitle.toLowerCase();
+    if (!match) {
+      if ((obsLower.includes('budget') || obsLower.includes('money') || obsLower.includes('cost')) &&
+          (titleLower.includes('buy') || titleLower.includes('order') || titleLower.includes('purchase') || titleLower.includes('shop'))) match = true;
+      if ((obsLower.includes('skill') || obsLower.includes('learn') || obsLower.includes('experience')) &&
+          (titleLower.includes('build') || titleLower.includes('code') || titleLower.includes('design') || titleLower.includes('solder'))) match = true;
+      if ((obsLower.includes('time') || obsLower.includes('busy') || obsLower.includes('schedule')) &&
+          (titleLower.includes('practice') || titleLower.includes('session') || titleLower.includes('weekly'))) match = true;
+    }
+    if (match) {
+      results.push({ obstacle: obs, fix: obstacleSolutions[obs] !== 'loading' ? obstacleSolutions[obs] : null });
+    }
+  });
+  return results.slice(0, 2);
+}
+
+async function extractNoor() {
+  if (phase !== 2) return; // only run during Identify phase
+  var convo = history.slice(-6).map(function(m) { // last 6 messages is enough context
+    return m.role.toUpperCase() + ': ' + m.content;
+  }).join('\n');
+
+  var prompt = 'Read this conversation and extract any Needs, Opportunities, Obstacles, and Resources the user has mentioned.\n\n'
+    + 'Conversation:\n' + convo + '\n\n'
+    + 'Return ONLY valid JSON, no markdown:\n'
+    + '{"needs":["item"],"opps":["item"],"obstacles":["item"],"resources":["item"]}\n\n'
+    + 'Rules:\n'
+    + '- Only include items the user actually mentioned, do not invent\n'
+    + '- Each item: 3-8 words, plain language\n'
+    + '- Empty array if nothing mentioned for that category\n'
+    + '- Needs: things required. Opps: advantages/timing/skills. Obstacles: blockers. Resources: what they have.';
+
+  try {
+    var data = null;
+    try {
+      var res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          messages: [{role: 'user', content: prompt}],
+          system: 'Return only valid JSON. No markdown, no explanation.'
+        })
+      });
+      data = await res.json();
+    } catch(e1){
+      var key = localStorage.getItem('dsidr_api_key');
+      if(key){
+        var res2 = await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'x-api-key':key,
+            'anthropic-version':'2023-06-01',
+            'anthropic-dangerous-direct-browser-access':'true'
+          },
+          body:JSON.stringify({
+            model:'claude-sonnet-4-20250514',
+            max_tokens:400,
+            system:'Return only valid JSON. No markdown, no explanation.',
+            messages:[{role:'user',content:prompt}]
+          })
+        });
+        data = await res2.json();
+      } else { return; } // no AI available, skip silently
+    }
+    if(!data || data.error) return;
+    var text = (data && data.content && data.content[0]) ? data.content[0].text || '' : '';
+    var parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    // Merge new items — avoid duplicates
+    function mergeItems(existing, incoming, selectedSet) {
+      if (!incoming) return existing;
+      incoming.forEach(function(item) {
+        var already = existing.some(function(e) {
+          return e.toLowerCase().includes(item.toLowerCase().slice(0, 8));
+        });
+        if (!already && item.trim()){
+          existing.push(item.trim());
+          selectedSet.add(item.trim());
+        }
+      });
+      return existing;
+    }
+    noorData.needs     = mergeItems(noorData.needs,     parsed.needs,     noorSelected.needs);
+    noorData.opps      = mergeItems(noorData.opps,      parsed.opps,      noorSelected.opps);
+    noorData.obstacles = mergeItems(noorData.obstacles,  parsed.obstacles, noorSelected.obstacles);
+    noorData.resources = mergeItems(noorData.resources,  parsed.resources, noorSelected.resources);
+    renderNoor();
+    renderNoorSuggestions();
+    updateQuickPicks();
+  } catch(e) {
+    console.log('NOOR extraction skipped:', e.message);
+    // Silently fail — never interrupt the main coaching flow
+  }
+}
+
+
+// ── THEME TOGGLE ──
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  var isLight = document.body.classList.contains('light');
+  localStorage.setItem('dsidr_theme', isLight ? 'light' : 'dark');
+  document.getElementById('theme-icon-sun').style.display = isLight ? 'none' : 'block';
+  document.getElementById('theme-icon-moon').style.display = isLight ? 'block' : 'none';
+}
+(function(){
+  var saved = localStorage.getItem('dsidr_theme');
+  if(saved === 'light'){
+    document.body.classList.add('light');
+    document.getElementById('theme-icon-sun').style.display = 'none';
+    document.getElementById('theme-icon-moon').style.display = 'block';
+  }
+})();
+
+// ── TIME HELPERS ──
+function fmtTime(mins){
+  if(!mins) return '';
+  if(mins < 60) return mins + 'm';
+  var h = Math.floor(mins/60);
+  var m = mins % 60;
+  return m > 0 ? h + 'h ' + m + 'm' : h + 'h';
+}
+
+var timeOpts = [15, 30, 60, 90, 120, 180];
+
+function cycleTime(qid){
+  var q = quests.find(function(x){return x.id === qid;});
+  if(!q) return;
+  var cur = timeOpts.indexOf(q.mins);
+  q.mins = timeOpts[(cur + 1) % timeOpts.length];
+  renderQuestLog();
+  renderPlanner();
+}
+
+// ── TIME FILTER ──
+var activeTimeFilter = 0;
+function filterTime(mins, btn){
+  activeTimeFilter = mins;
+  document.querySelectorAll('.tf-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  applyTimeFilter();
+}
+
+function applyTimeFilter(){
+  var cards = document.querySelectorAll('.qc');
+  var shown = 0;
+  var totalMins = 0;
+  cards.forEach(function(card){
+    var qid = parseInt(card.dataset.qid);
+    var q = quests.find(function(x){return x.id === qid;});
+    if(!q){card.classList.remove('time-hidden');shown++;return;}
+    if(q.status === 'done'){card.classList.remove('time-hidden');return;}
+    if(activeTimeFilter === 0 || (q.mins && q.mins <= activeTimeFilter)){
+      card.classList.remove('time-hidden');
+      shown++;
+      if(q.mins && q.status !== 'done') totalMins += q.mins;
+    } else {
+      card.classList.add('time-hidden');
+    }
+  });
+  var tfTotal = document.getElementById('tf-total');
+  if(tfTotal && activeTimeFilter > 0){
+    tfTotal.textContent = shown + ' tasks · ' + fmtTime(totalMins);
+  } else if(tfTotal){
+    tfTotal.textContent = '';
+  }
+}
+
+// ── DO PHASE TAB SWITCHING ──
+var activeDoTab = 'quests';
+function switchDoTab(tab){
+  activeDoTab = tab;
+  document.querySelectorAll('.do-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('dt-' + tab).classList.add('active');
+  var views = {
+    quests: ['quest-log','quest-add-btn','time-filter','do-progress','do-review-btn'],
+    planner: ['planner-view'],
+    time: ['time-budget-view'],
+    team: ['team-view']
+  };
+  // Hide all
+  Object.values(views).flat().forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.style.display='none';el.classList.remove('vis');}
+  });
+  // Show selected
+  (views[tab]||[]).forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.style.display=id==='time-filter'?'flex':'block';el.classList.add('vis');}
+  });
+  if(tab==='planner') renderPlanner();
+  if(tab==='time') renderTimeBudget();
+  if(tab==='team') renderTeam();
+}
+
+// ── WEEKLY PLANNER ──
+function renderPlanner(){
+  var container = document.getElementById('planner-week');
+  if(!container) return;
+  var today = new Date();
+  var dayOfWeek = today.getDay();
+  var startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - dayOfWeek);
+
+  var dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var html = '';
+
+  for(var d = 0; d < 7; d++){
+    var date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + d);
+    var isToday = date.toDateString() === today.toDateString();
+    var dayKey = date.toISOString().slice(0,10);
+
+    // Find tasks assigned to this day
+    var dayTasks = quests.filter(function(q){return q.planDay === dayKey;});
+    var dayTotal = dayTasks.reduce(function(s,q){return s + (q.mins||0);},0);
+
+    html += '<div class="planner-day'+(isToday?' today':'')+'">';
+    html += '<div class="planner-day-hdr"><span>'+dayNames[d]+' '+date.getDate()+'</span>';
+    if(dayTotal > 0) html += '<span class="day-total">'+fmtTime(dayTotal)+'</span>';
+    html += '</div>';
+
+    if(dayTasks.length === 0){
+      html += '<div class="planner-empty">No tasks</div>';
+    } else {
+      dayTasks.forEach(function(q){
+        html += '<div class="planner-task'+(q.status==='done'?' done':'')+'">';
+        html += '<span>'+esc(q.title.length > 22 ? q.title.slice(0,21)+'…' : q.title)+'</span>';
+        if(q.mins) html += '<span class="pt-time">'+fmtTime(q.mins)+'</span>';
+        html += '</div>';
+      });
+    }
+    // Quick-assign unplanned tasks
+    var unplanned = quests.filter(function(q){return !q.planDay && q.status !== 'done';});
+    if(unplanned.length > 0){
+      html += '<div class="planner-add" onclick="assignToDay(\''+dayKey+'\')">+ assign task</div>';
+    }
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function assignToDay(dayKey){
+  var unplanned = quests.filter(function(q){return !q.planDay && q.status !== 'done';});
+  if(unplanned.length === 0) return;
+  // Simple: assign first unplanned task
+  var names = unplanned.map(function(q,i){return (i+1)+'. '+q.title;}).join('\n');
+  var pick = prompt('Which task? Enter number:\n'+names);
+  if(!pick) return;
+  var idx = parseInt(pick) - 1;
+  if(idx >= 0 && idx < unplanned.length){
+    unplanned[idx].planDay = dayKey;
+    renderPlanner();
+    showXP('+5 XP · Task scheduled!');
+  }
+}
+
+// ══════════════════════════════════════
+// ── 168 HOUR TIME BUDGET ──
+// ══════════════════════════════════════
+var timeBudget = {
+  sleep: 56, school: 35, homework: 7, activities: 10,
+  chores: 5, meals: 10, commute: 5, screen: 14
+};
+var timeBudgetLabels = {
+  sleep:{icon:'\u{1f634}',label:'Sleep',min:28,max:70},
+  school:{icon:'\u{1f3eb}',label:'School',min:0,max:50},
+  homework:{icon:'\u{1f4da}',label:'Homework',min:0,max:30},
+  activities:{icon:'\u26bd',label:'Activities',min:0,max:30},
+  chores:{icon:'\u{1f9f9}',label:'Chores',min:0,max:20},
+  meals:{icon:'\u{1f37d}',label:'Meals',min:5,max:21},
+  commute:{icon:'\u{1f68c}',label:'Commute',min:0,max:20},
+  screen:{icon:'\u{1f4f1}',label:'Free screen',min:0,max:40}
+};
+var barColors = ['#1E3A6E','#2563ff','#3A6FA0','#5B9BD5','#7DB8E0','#A8D4EB','#c8e6f5','#00c896'];
+
+function renderTimeBudget(){
+  var sliders = document.getElementById('time-sliders');
+  var summary = document.getElementById('time-summary');
+  if(!sliders) return;
+
+  var html = '';
+  var keys = Object.keys(timeBudgetLabels);
+  keys.forEach(function(key){
+    var cfg = timeBudgetLabels[key];
+    var val = timeBudget[key];
+    html += '<div class="tb-row">'
+      + '<span class="tb-icon">'+cfg.icon+'</span>'
+      + '<span class="tb-label">'+cfg.label+'</span>'
+      + '<input type="range" class="tb-slider" min="'+cfg.min+'" max="'+cfg.max+'" value="'+val+'" oninput="updateTimeBudget(\''+key+'\',this.value)">'
+      + '<span class="tb-val" id="tb-'+key+'">'+fmtTimeHrs(val)+'</span>'
+      + '</div>';
+  });
+  sliders.innerHTML = html;
+  updateTimeSummary();
+}
+
+function fmtTimeHrs(hrs){
+  if(hrs < 1) return hrs*60+'m';
+  var h=Math.floor(hrs);var m=Math.round((hrs-h)*60);
+  return m>0?h+'h'+m+'m':h+'h';
+}
+
+function updateTimeBudget(key, val){
+  timeBudget[key] = parseInt(val);
+  var el = document.getElementById('tb-'+key);
+  if(el) el.textContent = fmtTimeHrs(parseInt(val));
+  updateTimeSummary();
+  scheduleAutoSave();
+}
+
+function updateTimeSummary(){
+  var summary = document.getElementById('time-summary');
+  if(!summary) return;
+  var used = 0;
+  var keys = Object.keys(timeBudgetLabels);
+  keys.forEach(function(k){ used += timeBudget[k]; });
+  var available = 168 - used;
+  var projNeeded = quests.reduce(function(s,q){return s+(q.status!=='done'?(q.mins||30):0);},0)/60;
+  var cls = available >= projNeeded ? 'good' : available > 0 ? 'tight' : 'over';
+
+  // Visual bar
+  var barHtml = '<div class="tb-bar">';
+  keys.forEach(function(k,i){
+    var pct = (timeBudget[k]/168*100).toFixed(1);
+    barHtml += '<div class="tb-seg" style="width:'+pct+'%;background:'+barColors[i]+'" title="'+timeBudgetLabels[k].label+': '+timeBudget[k]+'h"></div>';
+  });
+  var availPct = Math.max(0,available/168*100).toFixed(1);
+  barHtml += '<div class="tb-seg" style="width:'+availPct+'%;background:var(--s2)" title="Available: '+available+'h"></div>';
+  barHtml += '</div>';
+
+  summary.innerHTML = '<div class="tb-avail '+cls+'">'
+    + '<div class="tb-avail-num">'+available+'h</div>'
+    + '<div class="tb-avail-label">Available for your project</div>'
+    + '</div>'
+    + '<div style="font-size:0.72rem;color:var(--t3);text-align:center;margin-top:6px;">Your quests need about '+Math.ceil(projNeeded)+'h total</div>'
+    + barHtml;
+}
+
+// ══════════════════════════════════════
+// ── FINANCIAL BUDGET ──
+// ══════════════════════════════════════
+var budgetItems = [];
+var budgetLimit = 0;
+var moneyDetected = false;
+
+function checkForMoney(text){
+  if(moneyDetected) return;
+  var lower = text.toLowerCase();
+  if(lower.match(/\$\d|budget|cost|money|spend|afford|price|buy|purchase|order|paid/)){
+    moneyDetected = true;
+    var mb = document.getElementById('money-budget');
+    if(mb) mb.style.display = 'block';
+    // Try to extract budget amount
+    var amtMatch = text.match(/\$(\d+)/);
+    if(amtMatch) budgetLimit = parseInt(amtMatch[1]);
+    renderBudget();
+  }
+}
+
+function addBudgetItem(){
+  var name = document.getElementById('money-item-name');
+  var cost = document.getElementById('money-item-cost');
+  if(!name.value.trim() || !cost.value) return;
+  budgetItems.push({name:name.value.trim(), cost:parseFloat(cost.value), status:'planned'});
+  name.value=''; cost.value='';
+  renderBudget();
+  showXP('+5 XP');
+  scheduleAutoSave();
+}
+
+function removeBudgetItem(idx){
+  budgetItems.splice(idx,1);
+  renderBudget();
+}
+
+function toggleBudgetStatus(idx){
+  budgetItems[idx].status = budgetItems[idx].status === 'purchased' ? 'planned' : 'purchased';
+  renderBudget();
+}
+
+function renderBudget(){
+  var el = document.getElementById('money-items');
+  var total = document.getElementById('money-total');
+  if(!el) return;
+
+  el.innerHTML = budgetItems.map(function(item,i){
+    return '<div class="mb-item">'
+      + '<span class="mb-name" style="cursor:pointer;'+(item.status==='purchased'?'text-decoration:line-through;opacity:0.5;':'')+'" onclick="toggleBudgetStatus('+i+')">'
+      + (item.status==='purchased'?'\u2705 ':'\u{1f6d2} ') + esc(item.name) + '</span>'
+      + '<span><span class="mb-cost">$'+item.cost.toFixed(2)+'</span>'
+      + '<span class="mb-del" onclick="removeBudgetItem('+i+')">\u00d7</span></span>'
+      + '</div>';
+  }).join('');
+
+  var spent = budgetItems.reduce(function(s,i){return s+i.cost;},0);
+  var remaining = budgetLimit > 0 ? budgetLimit - spent : 0;
+  var totalHtml = '<span>Total: $'+spent.toFixed(2)+'</span>';
+  if(budgetLimit > 0){
+    totalHtml += '<span style="color:'+(remaining>=0?'var(--v2)':'#ff4d6d')+'">Remaining: $'+remaining.toFixed(2)+' of $'+budgetLimit+'</span>';
+  }
+  if(total) total.innerHTML = totalHtml;
+}
+
+// ══════════════════════════════════════
+// ── TEAM / COLLABORATION ──
+// ══════════════════════════════════════
+var teamMembers = [];
+var teamComments = [];
+
+function addTeamMember(){
+  var name = document.getElementById('team-name');
+  var role = document.getElementById('team-role');
+  if(!name.value.trim()) return;
+  teamMembers.push({name:name.value.trim(), role:role.value, quests:[]});
+  name.value='';
+  renderTeam();
+  showXP('+10 XP \u00b7 Team grows!');
+  scheduleAutoSave();
+}
+
+function removeTeamMember(idx){
+  teamMembers.splice(idx,1);
+  renderTeam();
+}
+
+function assignQuestToMember(memberIdx){
+  var unassigned = quests.filter(function(q){
+    return q.status !== 'done' && !teamMembers.some(function(m){return m.quests.indexOf(q.id) >= 0;});
+  });
+  if(unassigned.length === 0){showXP('All quests assigned!');return;}
+  var names = unassigned.map(function(q,i){return (i+1)+'. '+q.title;}).join('\n');
+  var pick = prompt('Assign which quest to '+teamMembers[memberIdx].name+'?\n'+names);
+  if(!pick) return;
+  var idx = parseInt(pick)-1;
+  if(idx >= 0 && idx < unassigned.length){
+    teamMembers[memberIdx].quests.push(unassigned[idx].id);
+    renderTeam();
+    showXP('+5 XP \u00b7 Quest assigned!');
+  }
+}
+
+function addTeamComment(){
+  var inp = document.getElementById('team-comment-inp');
+  if(!inp || !inp.value.trim()) return;
+  var now = new Date();
+  teamComments.push({
+    name: teamMembers.length > 0 ? teamMembers[0].name : 'You',
+    text: inp.value.trim(),
+    time: (now.getMonth()+1)+'/'+now.getDate()+' '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')
+  });
+  inp.value='';
+  renderTeam();
+}
+
+function renderTeam(){
+  var el = document.getElementById('team-members');
+  var commentsEl = document.getElementById('team-comments');
+  if(!el) return;
+
+  if(teamMembers.length === 0){
+    el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--t3);font-size:0.82rem;">No team members yet. Add someone below!</div>';
+  } else {
+    el.innerHTML = teamMembers.map(function(m,i){
+      var roleClass = m.role.toLowerCase();
+      var initials = m.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+      var questTags = m.quests.map(function(qid){
+        var q = quests.find(function(x){return x.id===qid;});
+        return q ? '<span class="team-quest-tag">'+esc(q.title.length>20?q.title.slice(0,19)+'\u2026':q.title)+'</span>' : '';
+      }).join(' ');
+      return '<div class="team-card">'
+        + '<div class="team-avatar '+roleClass+'">'+initials+'</div>'
+        + '<div class="team-info"><div class="team-name">'+esc(m.name)+'</div>'
+        + '<div class="team-role-tag">'+esc(m.role)+'</div>'
+        + (questTags?'<div style="margin-top:4px;">'+questTags+'</div>':'')
+        + '</div>'
+        + '<button class="team-assign" onclick="assignQuestToMember('+i+')">Assign</button>'
+        + '<span class="team-remove" onclick="removeTeamMember('+i+')">\u00d7</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  if(commentsEl){
+    if(teamComments.length === 0){
+      commentsEl.innerHTML = '<div style="color:var(--t3);font-size:0.78rem;font-style:italic;padding:8px 0;">No comments yet. Start the conversation!</div>';
+    } else {
+      commentsEl.innerHTML = teamComments.map(function(c){
+        return '<div class="team-comment"><div class="tc-header"><span class="tc-name">'+esc(c.name)+'</span><span class="tc-time">'+c.time+'</span></div>'
+          + '<div class="tc-text">'+esc(c.text)+'</div></div>';
+      }).join('');
+    }
+  }
+}
+
+function cpLink() {
+  navigator.clipboard && navigator.clipboard.writeText(window.location.href);
+  showXP('Link copied!');
+}
+
+document.querySelectorAll('textarea').forEach(t=>{t.addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';});});
+
+// ── API KEY MANAGEMENT ──
+function promptApiKey(){
+  const current=localStorage.getItem('dsidr_api_key');
+  const msg=current
+    ? 'API key is set. Enter a new key to change it, or leave blank and tap OK to keep it.\n\nKey starts with: '+current.slice(0,12)+'...'
+    : 'Paste your Anthropic API key for live AI coaching.\nGet one free at console.anthropic.com\n\nWithout a key, the coach uses built-in responses.';
+  const key=prompt(msg, '');
+  if(key===null) return; // cancelled
+  if(key.trim()){
+    localStorage.setItem('dsidr_api_key', key.trim());
+    updateAIBadge(true);
+  } else if(!current){
+    updateAIBadge(false);
+  }
+}
+
+function updateAIBadge(connected){
+  const dot=document.getElementById('ai-dot');
+  const lbl=document.getElementById('ai-label');
+  if(connected){
+    dot.style.background='#22c55e';
+    lbl.textContent='AI Connected \u00b7 Claude Sonnet';
+  } else {
+    dot.style.background='var(--t3)';
+    lbl.textContent='Tap to connect AI';
+  }
+}
+
+// ══════════════════════════════════════
+// ── ACCOUNT SYSTEM ──
+// ══════════════════════════════════════
+var currentUser = null;
+var currentProjectId = null;
+var saveTimer = null;
+
+function checkSession(){
+  var saved = localStorage.getItem('dsidr_session');
+  if(saved){
+    try{
+      currentUser = JSON.parse(saved);
+      document.getElementById('login-overlay').classList.remove('vis');
+      showProjectPicker();
+    }catch(e){localStorage.removeItem('dsidr_session');}
+  }
+}
+
+async function doLogin(){
+  var code = document.getElementById('login-code').value.trim();
+  var name = document.getElementById('login-name').value.trim();
+  var err = document.getElementById('login-err');
+  var btn = document.getElementById('login-btn');
+  if(!code){err.textContent='Enter your access code';return;}
+  btn.disabled=true; btn.textContent='Checking...'; err.textContent='';
+  try{
+    var res = await fetch('/api/login',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({code:code, name:name||undefined})
+    });
+    var data = await res.json();
+    if(data.error){err.textContent=data.error;btn.disabled=false;btn.textContent='Enter';return;}
+    currentUser = data.user;
+    localStorage.setItem('dsidr_session',JSON.stringify(currentUser));
+    document.getElementById('login-overlay').classList.remove('vis');
+    showProjectPicker();
+    maybeStartTutorial();
+  }catch(e){
+    err.textContent='Connection error. Try again.';
+  }
+  btn.disabled=false;btn.textContent='Enter';
+}
+
+function skipLogin(){
+  document.getElementById('login-overlay').classList.remove('vis');
+  currentUser = null;
+  currentProjectId = null;
+  maybeStartTutorial();
+}
+
+function doLogout(){
+  localStorage.removeItem('dsidr_session');
+  currentUser = null;
+  currentProjectId = null;
+  document.getElementById('picker-overlay').classList.remove('vis');
+  document.getElementById('login-overlay').classList.add('vis');
+  document.getElementById('login-code').value='';
+  document.getElementById('login-err').textContent='';
+}
+
+async function showProjectPicker(){
+  if(!currentUser) return;
+  var picker = document.getElementById('picker-overlay');
+  picker.classList.add('vis');
+  document.getElementById('picker-user').textContent = currentUser.name + ' \u00b7 ' + currentUser.code;
+
+  var owned = document.getElementById('picker-owned');
+  var shared = document.getElementById('picker-shared');
+  owned.innerHTML = '<div style="color:var(--t3);font-size:0.78rem;padding:10px 0;">Loading...</div>';
+  shared.innerHTML = '';
+
+  try{
+    var res = await fetch('/api/projects',{headers:{'x-user-id':currentUser.id}});
+    var data = await res.json();
+    if(data.owned && data.owned.length > 0){
+      owned.innerHTML = data.owned.map(function(p){
+        var ago = timeAgo(p.updated_at);
+        return '<div class="proj-card" onclick="loadProjectFromPicker(\''+p.id+'\')">'
+          + '<div class="proj-card-name">'+esc(p.name)+'</div>'
+          + '<div class="proj-card-meta">'+esc(p.template||'Project')+' \u00b7 '+ago+'</div>'
+          + '</div>';
+      }).join('');
+    } else {
+      owned.innerHTML = '<div style="color:var(--t3);font-size:0.78rem;padding:10px 0;font-style:italic;">No projects yet. Tap New Project to start!</div>';
+    }
+    if(data.shared && data.shared.length > 0){
+      shared.innerHTML = data.shared.map(function(p){
+        return '<div class="proj-card" onclick="loadProjectFromPicker(\''+p.id+'\')">'
+          + '<div class="proj-card-name">'+esc(p.name)+'</div>'
+          + '<div class="proj-card-meta">by '+esc(p.owner_name||'?')+' \u00b7 '+esc(p.role)+'</div>'
+          + '<div class="proj-card-shared">shared with you</div>'
+          + '</div>';
+      }).join('');
+    } else {
+      shared.innerHTML = '<div style="color:var(--t3);font-size:0.78rem;padding:10px 0;font-style:italic;">No shared projects yet.</div>';
+    }
+  }catch(e){
+    owned.innerHTML = '<div style="color:#ff4d6d;font-size:0.78rem;padding:10px 0;">Could not load projects.</div>';
+  }
+}
+
+function closePicker(){
+  document.getElementById('picker-overlay').classList.remove('vis');
+  currentProjectId = null;
+  go('home');
+}
+
+function timeAgo(dateStr){
+  var diff = (Date.now() - new Date(dateStr).getTime())/1000;
+  if(diff<60) return 'just now';
+  if(diff<3600) return Math.floor(diff/60)+'m ago';
+  if(diff<86400) return Math.floor(diff/3600)+'h ago';
+  return Math.floor(diff/86400)+'d ago';
+}
+
+async function loadProjectFromPicker(projectId){
+  currentProjectId = projectId;
+  document.getElementById('picker-overlay').classList.remove('vis');
+
+  try{
+    var res = await fetch('/api/projects/'+projectId,{headers:{'x-user-id':currentUser.id}});
+    var result = await res.json();
+    if(result.project && result.project.data){
+      restoreProjectState(result.project.data);
+      projName = result.project.name || projName;
+      updateHomeCard();
+      // Go to wherever they left off
+      if(phase >= 4) go('do');
+      else if(phase > 0) go('coach');
+      else go('home');
+      showXP('Project loaded!');
+    }
+  }catch(e){
+    showXP('Error loading project');
+    go('home');
+  }
+}
+
+function restoreProjectState(data){
+  projName = data.projName || '';
+  tmpl = data.tmpl || 'Custom Project';
+  wks = data.wks || 4;
+  phase = data.phase || 0;
+  history = data.history || [];
+  projectPlan = data.projectPlan || null;
+  doBuilt = data.doBuilt || false;
+  quests = data.quests || [];
+  questIdCounter = data.questIdCounter || 0;
+  logCount = data.logCount || 0;
+  noorData = data.noorData || {needs:[],opps:[],obstacles:[],resources:[]};
+  obstacleSolutions = data.obstacleSolutions || {};
+  timeBudget = data.timeBudget || {sleep:56,school:35,homework:7,activities:10,chores:5,meals:10,commute:5,screen:14};
+  budgetItems = data.budgetItems || [];
+  budgetLimit = data.budgetLimit || 0;
+  moneyDetected = data.moneyDetected || false;
+  teamMembers = data.teamMembers || [];
+  teamComments = data.teamComments || [];
+  isQuickTask = data.isQuickTask || false;
+  doTasks = data.doTasks || {todo:[],doing:[],done:[]};
+
+  // Restore UI state
+  updPhUI(phase);
+  if(doBuilt){renderQuestLog();updateProgress();}
+  if(moneyDetected){var mb=document.getElementById('money-budget');if(mb)mb.style.display='block';renderBudget();}
+
+  // Restore reflections
+  if(data.reflections){
+    var r1=document.getElementById('reflect-1');var r2=document.getElementById('reflect-2');var r3=document.getElementById('reflect-3');
+    if(r1) r1.value=data.reflections[0]||'';
+    if(r2) r2.value=data.reflections[1]||'';
+    if(r3) r3.value=data.reflections[2]||'';
+  }
+}
+
+function gatherProjectState(){
+  var r1=document.getElementById('reflect-1');
+  var r2=document.getElementById('reflect-2');
+  var r3=document.getElementById('reflect-3');
+  return {
+    projName:projName, tmpl:tmpl, wks:wks, phase:phase, history:history,
+    projectPlan:projectPlan, doBuilt:doBuilt, quests:quests, questIdCounter:questIdCounter,
+    logCount:logCount, noorData:noorData, obstacleSolutions:obstacleSolutions,
+    timeBudget:timeBudget, budgetItems:budgetItems, budgetLimit:budgetLimit,
+    moneyDetected:moneyDetected, teamMembers:teamMembers, teamComments:teamComments,
+    isQuickTask:isQuickTask, doTasks:doTasks,
+    reflections:[r1?r1.value:'', r2?r2.value:'', r3?r3.value:'']
+  };
+}
+
+async function saveProject(){
+  if(!currentUser || !projName) return;
+
+  var state = gatherProjectState();
+
+  try{
+    if(currentProjectId){
+      // Update existing
+      await fetch('/api/projects/'+currentProjectId,{
+        method:'PUT',
+        headers:{'Content-Type':'application/json','x-user-id':currentUser.id},
+        body:JSON.stringify({data:state, name:projName})
+      });
+    } else {
+      // Create new
+      var res = await fetch('/api/projects',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-user-id':currentUser.id},
+        body:JSON.stringify({name:projName, template:tmpl, data:state})
+      });
+      var result = await res.json();
+      if(result.project) currentProjectId = result.project.id;
+    }
+  }catch(e){
+    console.log('Save failed:',e);
+  }
+}
+
+function scheduleAutoSave(){
+  if(!currentUser) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveProject, 2000); // debounce 2 seconds
+}
+
+// ── Hook auto-save into key actions ──
+var _origNextPhase = nextPhase;
+nextPhase = function(){_origNextPhase();scheduleAutoSave();};
+
+var _origStartDoPhase = startDoPhase;
+startDoPhase = function(){_origStartDoPhase();scheduleAutoSave();};
+
+// Check session on load
+checkSession();
+
+// Check AI status on load
+(function(){
+  const hasKey=!!localStorage.getItem('dsidr_api_key');
+  // Also check if server proxy is available
+  fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:'test'}],system:'Reply with just OK'})})
+    .then(r=>r.json()).then(d=>{if(d.content) updateAIBadge(true); else if(hasKey) updateAIBadge(true); else updateAIBadge(false);})
+    .catch(()=>{ updateAIBadge(hasKey); });
+})();
+
+// ── INTERACTIVE TUTORIAL WALKTHROUGH ──
+var tutStep = 0;
+var tutSteps = [
+  {
+    title: 'Welcome to DSIDR \u2728',
+    desc: 'Your AI-powered project coach. This quick tour will show you how everything works. Takes about 30 seconds.',
+    target: '.wm',
+    position: 'below',
+    screen: 'home'
+  },
+  {
+    title: 'Start a New Project',
+    desc: 'Tap New to begin. Pick Full Project for something big, or Quick Task for homework and chores.',
+    target: '#nb-new',
+    position: 'above',
+    screen: 'home'
+  },
+  {
+    title: 'Full Project vs Quick Task',
+    desc: 'Full Projects walk you through planning with your AI coach. Quick Tasks skip straight to action \u2014 perfect for things due tomorrow.',
+    target: '.mode-toggle',
+    position: 'below',
+    screen: 'new'
+  },
+  {
+    title: 'Your AI Coach',
+    desc: 'The coach guides you through Define (your goal), State (your why), and Identify (what you need). Just talk naturally \u2014 type or use voice.',
+    target: '.chat',
+    position: 'below',
+    screen: 'coach'
+  },
+  {
+    title: 'Your Landscape',
+    desc: 'During Identify, tap suggestion chips to map your Needs, Opportunities, Obstacles, and Resources. You can add your own too.',
+    target: '#noor-panel',
+    position: 'above',
+    screen: 'coach'
+  },
+  {
+    title: 'Your Constellation',
+    desc: 'After planning, your project becomes a visual star map. Goal at center, everything else branching out. This is YOUR plan.',
+    target: '#plan-card-bridge',
+    position: 'below',
+    screen: 'bridge'
+  },
+  {
+    title: 'Quest Log',
+    desc: 'Your tasks appear as quests. Each has a time estimate you can adjust by tapping. Start a quest, log progress, add photos, mark done.',
+    target: '#quest-log',
+    position: 'below',
+    screen: 'do'
+  },
+  {
+    title: 'Find Your Time',
+    desc: 'Tap "I have 15m" or "30m" to filter tasks that fit your schedule right now. The Weekly Plan tab shows your whole week.',
+    target: '.time-filter',
+    position: 'below',
+    screen: 'do'
+  },
+  {
+    title: 'Switch the Vibe',
+    desc: 'Tap the sun or moon icon to switch between dark and light mode. Make it yours.',
+    target: '#theme-toggle',
+    position: 'below',
+    screen: null
+  },
+  {
+    title: 'Review \u0026 Reflect',
+    desc: 'When you finish, see your stats, revisit your constellation, and reflect on what you learned. Then share or start your next project!',
+    target: '#nb-review',
+    position: 'above',
+    screen: null
+  },
+  {
+    title: 'You\u0027re ready! \u{1f680}',
+    desc: 'Tap New to start your first project, or hit the \u26a1 Demo button to explore a completed example. The ? button brings this tour back anytime.',
+    target: '#nb-new',
+    position: 'above',
+    screen: 'home',
+    last: true
+  }
+];
+
+function tutStart(){
+  tutStep = 0;
+  document.getElementById('tut-overlay').classList.add('vis');
+  tutRender();
+}
+
+function tutEnd(){
+  document.getElementById('tut-overlay').classList.remove('vis');
+  localStorage.setItem('dsidr_tut_done', '1');
+  go('home');
+}
+
+function tutNext(){
+  if(tutSteps[tutStep].last){ tutEnd(); return; }
+  tutStep = Math.min(tutStep + 1, tutSteps.length - 1);
+  tutRender();
+}
+
+function tutPrev(){
+  tutStep = Math.max(tutStep - 1, 0);
+  tutRender();
+}
+
+function tutRender(){
+  var step = tutSteps[tutStep];
+  var total = tutSteps.length;
+
+  // Navigate to correct screen if needed
+  if(step.screen) go(step.screen);
+  // Make sure noor panel is visible if targeting it
+  if(step.target === '#noor-panel'){
+    var np = document.getElementById('noor-panel');
+    if(np) np.style.display = 'block';
+  }
+
+  // Update card content
+  document.getElementById('tut-step-num').textContent = 'Step ' + (tutStep + 1) + ' of ' + total;
+  document.getElementById('tut-title').textContent = step.title;
+  document.getElementById('tut-desc').textContent = step.desc;
+
+  // Buttons
+  document.getElementById('tut-back').style.display = tutStep === 0 ? 'none' : 'block';
+  var nextBtn = document.getElementById('tut-next');
+  nextBtn.textContent = step.last ? 'Let\u0027s go!' : 'Next \u2192';
+
+  // Dots
+  var dotsHtml = '';
+  for(var i = 0; i < total; i++){
+    dotsHtml += '<div class="tut-dot' + (i === tutStep ? ' active' : '') + '"></div>';
+  }
+  document.getElementById('tut-dots').innerHTML = dotsHtml;
+
+  // Position spotlight and card
+  requestAnimationFrame(function(){
+    var el = document.querySelector(step.target);
+    var spot = document.getElementById('tut-spotlight');
+    var card = document.getElementById('tut-card');
+
+    if(el){
+      var rect = el.getBoundingClientRect();
+      var pad = 8;
+      spot.style.display = 'block';
+      spot.style.left = (rect.left - pad) + 'px';
+      spot.style.top = (rect.top - pad) + 'px';
+      spot.style.width = (rect.width + pad * 2) + 'px';
+      spot.style.height = (rect.height + pad * 2) + 'px';
+
+      // Position card — reset any previous centering transform
+      card.style.transform = 'none';
+      var cardW = Math.min(300, window.innerWidth - 40);
+      var cardLeft = Math.max(20, Math.min(rect.left, window.innerWidth - cardW - 20));
+
+      if(step.position === 'below'){
+        card.style.top = (rect.bottom + 16) + 'px';
+        card.style.bottom = 'auto';
+        // If card would go off bottom, flip to above
+        if(rect.bottom + 250 > window.innerHeight){
+          card.style.top = 'auto';
+          card.style.bottom = (window.innerHeight - rect.top + 16) + 'px';
+        }
+      } else {
+        card.style.bottom = (window.innerHeight - rect.top + 16) + 'px';
+        card.style.top = 'auto';
+        // If card would go off top, flip to below
+        if(rect.top - 250 < 0){
+          card.style.bottom = 'auto';
+          card.style.top = (rect.bottom + 16) + 'px';
+        }
+      }
+      card.style.left = cardLeft + 'px';
+    } else {
+      // No target found, center everything
+      spot.style.display = 'none';
+      card.style.top = '50%';
+      card.style.left = '50%';
+      card.style.transform = 'translate(-50%, -50%)';
+    }
+  });
+}
+
+// Auto-start tutorial on first visit (only after login)
+function maybeStartTutorial(){
+  if(!localStorage.getItem('dsidr_tut_done') && !document.getElementById('login-overlay').classList.contains('vis')){
+    setTimeout(tutStart, 600);
+  }
+}
+</script>
+</body>
+</html>
